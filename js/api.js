@@ -26,8 +26,8 @@ const API = (function() {
      */
     async function searchMusic(query = 'album mexico', page = 0) {
         const rows = CONFIG.RESULTS_PER_PAGE;
-        // ✅ Ordenar por más reciente primero (publicdate desc)
-        const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date&output=json&rows=${rows}&page=${page}&sort[]=publicdate desc`;
+        // ✅ Incluir 'uploader' en los campos solicitados
+        const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader&output=json&rows=${rows}&page=${page}&sort[]=publicdate desc`;
 
         try {
             const response = await fetch(url);
@@ -132,32 +132,4 @@ const API = (function() {
     }
 
     /**
-     * Formatea una fecha para mostrar
-     * @param {string} dateStr - Fecha en formato ISO
-     * @returns {string} - Fecha formateada
-     */
-    function formatDate(dateStr) {
-        if (!dateStr) return 'Fecha desconocida';
-        try {
-            const d = new Date(dateStr);
-            return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
-        } catch {
-            return dateStr;
-        }
-    }
-
-    // ============================================================
-    // EXPORTAR
-    // ============================================================
-
-    return {
-        searchMusic,
-        getItemMetadata,
-        getImageUrl,
-        getAudioUrl,
-        extractArtists,
-        formatDate,
-        CONFIG
-    };
-
-})();
+     * Formatea una fecha
