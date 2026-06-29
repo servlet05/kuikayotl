@@ -22,15 +22,26 @@ const API = (function() {
      * @param {number} page - Número de página (0-indexed)
      * @returns {Promise<Object>} - Datos de la respuesta
      */
-    async function searchMusic(query = 'album mexico', page = 0) {
-        const rows = CONFIG.RESULTS_PER_PAGE;
-        const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date&output=json&rows=${rows}&page=${page}`;
+   async function searchMusic(query = 'album mexico', page = 0) {
+    const rows = CONFIG.RESULTS_PER_PAGE;
+    // 👇 AGREGAR sort[]=relevance desc al final de la URL
+    const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date&output=json&rows=${rows}&page=${page}&sort[]=relevance desc`;
 
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return {
+            docs: data.response.docs || [],
+            total: data.response.numFound || 0
+        };
+    } catch (error) {
+        console.error('Error en searchMusic:', error);
+        throw error;
+    }
+}
             const data = await response.json();
             return {
                 docs: data.response.docs || [],
