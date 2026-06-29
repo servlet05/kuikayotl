@@ -10,7 +10,6 @@ const Player = (function() {
     let playlist = [];
     let currentTrackIndex = -1;
 
-    // Elementos del DOM
     const btnPlayPause = document.getElementById('btnPlayPause');
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
@@ -80,7 +79,6 @@ const Player = (function() {
         updatePlayPauseButton(true);
         updateNowPlaying(title, artist);
 
-        // Guardar en playlist
         const index = playlist.findIndex(p => p.identifier === identifier);
         if (index === -1) {
             playlist.push({ identifier, title, artist, url });
@@ -110,8 +108,6 @@ const Player = (function() {
         if (playlist.length === 0) return;
         const nextIndex = (currentTrackIndex + 1) % playlist.length;
         const track = playlist[nextIndex];
-        // Nota: esta función necesita ser llamada con el contexto adecuado
-        // desde main.js para tener acceso a la función getAudioUrl
         return track;
     }
 
@@ -143,7 +139,6 @@ const Player = (function() {
      * Inicializa el reproductor con los event listeners
      */
     function init() {
-        // Event listeners del reproductor
         if (btnPlayPause) {
             btnPlayPause.addEventListener('click', togglePlayPause);
         }
@@ -166,7 +161,6 @@ const Player = (function() {
             });
         }
 
-        // Barra de progreso (clic para saltar)
         if (playerProgress) {
             playerProgress.addEventListener('click', function(e) {
                 const rect = this.getBoundingClientRect();
@@ -177,7 +171,6 @@ const Player = (function() {
             });
         }
 
-        // Eventos del audio
         audio.addEventListener('timeupdate', updateProgress);
 
         audio.addEventListener('ended', function() {
@@ -193,13 +186,11 @@ const Player = (function() {
         });
 
         audio.addEventListener('loadedmetadata', function() {
-            // Mostrar duración cuando se carga el archivo
             if (playerTime) {
                 playerTime.textContent = '0:00 / ' + formatTime(audio.duration);
             }
         });
 
-        // Actualizar barra de progreso cada segundo
         setInterval(updateProgress, 500);
     }
 
@@ -212,7 +203,6 @@ const Player = (function() {
         getPlaylist,
         getCurrentIndex,
         init,
-        // Exponer para que main.js pueda manipular si es necesario
         audio: audio
     };
 
