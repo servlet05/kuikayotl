@@ -872,4 +872,16 @@ a:hover {
     font-family: 'Segoe UI', Arial, sans-serif;
     z-index: 10;
 }
+    /* Forzar layout horizontal en el dropdown */
+#countryGrid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+}
+
+#countryGrid .country-item {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+}
 }
