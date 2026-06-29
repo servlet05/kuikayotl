@@ -800,6 +800,7 @@ a:hover {
     }
 }
     /* ===== DROPDOWN DE PAÍSES - VERSIÓN COMPACTA ===== */
+/* ===== DROPDOWN DE PAÍSES - HORIZONTAL ===== */
 .country-dropdown {
     position: absolute;
     top: 100%;
@@ -811,7 +812,7 @@ a:hover {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     padding: 10px 15px;
     z-index: 1000;
-    max-height: 200px;
+    max-height: 120px;
     overflow-y: auto;
 }
 
@@ -819,40 +820,43 @@ a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .country-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 4px 6px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    font-size: 1.8rem;
-    min-width: 36px;
-    height: 44px;
+    transition: all 0.2s;
+    font-size: 1.6rem;
+    min-width: 32px;
+    height: 38px;
     background: #f5f9ff;
     border: 1px solid #e0ecf8;
+    position: relative;
 }
 
 .country-item:hover {
     background: #1a5c9e;
     transform: scale(1.1);
     border-color: #1a5c9e;
+    z-index: 2;
 }
 
 .country-item .flag {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     line-height: 1;
 }
 
 .country-item .country-name {
-    display: none; /* Ocultar el nombre del país */
+    display: none;
 }
 
-/* Tooltip para mostrar el nombre al hacer hover */
+/* Tooltip al hacer hover */
 .country-item:hover::after {
     content: attr(data-country);
     position: absolute;
@@ -866,9 +870,6 @@ a:hover {
     font-size: 0.7rem;
     white-space: nowrap;
     font-family: 'Segoe UI', Arial, sans-serif;
-}
-
-.country-item {
-    position: relative;
+    z-index: 10;
 }
 }
