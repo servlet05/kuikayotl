@@ -92,45 +92,43 @@
     // FUNCIONES DE PAÍSES
     // ============================================================
 
-    function renderCountries() {
-        // Dropdown
-        if (countryGrid) {
-            countryGrid.innerHTML = '';
-            LATAM_COUNTRIES.forEach(country => {
-                const div = document.createElement('div');
-                div.className = 'country-item';
-                div.innerHTML = `
-                    <span class="flag">${country.flag}</span>
-                    <span class="country-name">${country.name}</span>
-                `;
-                div.addEventListener('click', function() {
-                    selectCountry(country);
-                    if (countryDropdown) countryDropdown.style.display = 'none';
-                });
-                countryGrid.appendChild(div);
+   function renderCountries() {
+    // Dropdown - Solo banderas
+    if (countryGrid) {
+        countryGrid.innerHTML = '';
+        LATAM_COUNTRIES.forEach(country => {
+            const div = document.createElement('div');
+            div.className = 'country-item';
+            div.setAttribute('data-country', country.name);
+            div.innerHTML = `<span class="flag">${country.flag}</span>`;
+            div.addEventListener('click', function() {
+                selectCountry(country);
+                if (countryDropdown) countryDropdown.style.display = 'none';
             });
-        }
-
-        // Sidebar
-        if (countrySidebar) {
-            countrySidebar.innerHTML = '';
-            LATAM_COUNTRIES.forEach(country => {
-                const div = document.createElement('div');
-                div.className = 'country-item';
-                if (country.name === currentCountry) {
-                    div.classList.add('active');
-                }
-                div.innerHTML = `
-                    <span class="flag">${country.flag}</span>
-                    <span class="country-name">${country.name}</span>
-                `;
-                div.addEventListener('click', function() {
-                    selectCountry(country);
-                });
-                countrySidebar.appendChild(div);
-            });
-        }
+            countryGrid.appendChild(div);
+        });
     }
+
+    // Sidebar - Con bandera y nombre (se mantiene igual)
+    if (countrySidebar) {
+        countrySidebar.innerHTML = '';
+        LATAM_COUNTRIES.forEach(country => {
+            const div = document.createElement('div');
+            div.className = 'country-item';
+            if (country.name === currentCountry) {
+                div.classList.add('active');
+            }
+            div.innerHTML = `
+                <span class="flag">${country.flag}</span>
+                <span class="country-name">${country.name}</span>
+            `;
+            div.addEventListener('click', function() {
+                selectCountry(country);
+            });
+            countrySidebar.appendChild(div);
+        });
+    }
+}
 
     function selectCountry(country) {
         currentCountry = country.name;
