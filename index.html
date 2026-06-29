@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuikayotl - Música Latinoamericana en Archive.org</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="logo">K<span>u</span>ikayotl</div>
+        <nav class="header-links">
+            <a href="#" data-query="album mexico">🎵 Música</a>
+            <a href="#" data-query="album mexico">🎤 Artistas</a>
+            <a href="#" class="dropdown-toggle">🏳️‍🌈 Países ▼</a>
+            <a href="#" id="linkRandom">🎲 Aleatorio</a>
+            <a href="#" id="linkTop">🔥 Top álbumes</a>
+            <a href="#" id="linkAbout">ℹ️ Acerca de</a>
+        </nav>
+    </header>
+
+    <!-- ===== DROPDOWN DE PAÍSES (se muestra al hacer clic en "Países") ===== -->
+    <div id="countryDropdown" class="country-dropdown" style="display:none;">
+        <div class="country-grid" id="countryGrid">
+            <!-- Los países se generarán con JavaScript -->
+        </div>
+    </div>
+
+    <!-- ===== CONTENEDOR PRINCIPAL ===== -->
+    <div class="container">
+
+        <!-- ===== COLUMNA IZQUIERDA ===== -->
+        <aside class="left-sidebar">
+            <div class="sidebar-box">
+                <div class="sidebar-title">🌎 Países</div>
+                <div id="countrySidebar" class="country-list">
+                    <!-- Lista de países se generará con JavaScript -->
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <div class="sidebar-title">📊 Estadísticas</div>
+                <ul class="sidebar-list">
+                    <li>Total de álbumes <span class="count" id="totalCount">...</span></li>
+                    <li>Artistas únicos <span class="count" id="artistCount">...</span></li>
+                    <li>País actual <span class="count" id="currentCountry">México</span></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-box">
+                <div class="sidebar-title">🏷️ Tags populares</div>
+                <div id="tagCloud">
+                    <span class="genre-tag">album</span>
+                    <span class="genre-tag">mexico</span>
+                    <span class="genre-tag">latino</span>
+                    <span class="genre-tag">folk</span>
+                    <span class="genre-tag">rock</span>
+                    <span class="genre-tag">tradicional</span>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <div class="sidebar-title">ℹ️ Acerca de</div>
+                <p class="about-text">
+                    Kuikayotl muestra álbumes musicales de Latinoamérica alojados en
+                    <a href="https://archive.org" target="_blank">Internet Archive</a>.
+                    Haz clic en un país para explorar su música.
+                </p>
+            </div>
+        </aside>
+
+        <!-- ===== COLUMNA CENTRAL ===== -->
+        <main class="main-content">
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="statAlbums">0</div>
+                    <div class="stat-label">Álbumes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statArtists">0</div>
+                    <div class="stat-label">Artistas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statYears">-</div>
+                    <div class="stat-label">Años de música</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statUpdated">-</div>
+                    <div class="stat-label">Último lanzamiento</div>
+                </div>
+            </div>
+
+            <!-- Grid de música -->
+            <div class="section-title">
+                <span id="sectionTitle">🎵 Álbumes de México</span>
+                <span>
+                    <span class="badge" id="resultBadge">Cargando...</span>
+                    <span class="pagination-info" id="paginationInfo"></span>
+                </span>
+            </div>
+            <div id="musicGrid" class="music-grid">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Cargando música desde Internet Archive...</p>
+                </div>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination" id="paginationControls">
+                <button id="prevPage" disabled>◀ Anterior</button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button id="nextPage">Siguiente ▶</button>
+            </div>
+
+        </main>
+
+        <!-- ===== COLUMNA DERECHA ===== -->
+        <aside class="right-sidebar">
+            <div class="right-box">
+                <div class="right-title">🎧 Escuchando ahora</div>
+                <div id="nowPlaying" class="now-playing-text">
+                    Selecciona una canción para reproducir
+                </div>
+            </div>
+
+            <div class="right-box">
+                <div class="right-title">📀 Últimos lanzamientos</div>
+                <div id="recentReleases">
+                    <p class="loading-text">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="right-box">
+                <div class="right-title">🔍 Búsqueda</div>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar álbumes...">
+                <button id="searchButton" class="search-button">Buscar</button>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div class="footer-title">Kuikayotl</div>
+                <p class="footer-description">
+                    Kuikayotl es un proyecto de música libre latinoamericana.
+                    Todo el contenido es obtenido de Internet Archive y está disponible bajo
+                    licencias Creative Commons.
+                </p>
+            </div>
+            <div>
+                <div class="footer-title">Enlaces</div>
+                <ul class="footer-links">
+                    <li><a href="#" id="footerAbout">Acerca de</a></li>
+                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#">Términos de uso</a></li>
+                    <li><a href="#">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Comunidad</div>
+                <ul class="footer-links">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Internet Archive</a></li>
+                    <li><a href="#">Creative Commons</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>
+                Kuikayotl · 2026 · Hecho con ❤️ desde Latinoamérica
+                <br>
+                <a href="#">RSS</a> · <a href="#">Licencias</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ===== REPRODUCTOR GLOBAL ===== -->
+    <div class="global-player" id="globalPlayer">
+        <div class="player-controls">
+            <button id="btnPrev" title="Anterior">⏮</button>
+            <button id="btnPlayPause" title="Reproducir/Pausa">▶</button>
+            <button id="btnNext" title="Siguiente">⏭</button>
+        </div>
+        <div class="player-info" id="playerInfo">Nada en reproducción</div>
+        <div class="player-progress" id="playerProgress">
+            <div class="player-progress-bar" id="playerProgressBar"></div>
+        </div>
+        <div class="player-time" id="playerTime">0:00 / 0:00</div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="js/api.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
