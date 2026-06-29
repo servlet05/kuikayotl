@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuikayotl - Música Latinoamericana en Archive.org</title>
+    <title>Kuikayotl - Música Latinoamericana</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,20 +12,18 @@
     <header class="header">
         <div class="logo">K<span>u</span>ikayotl</div>
         <nav class="header-links">
-            <a href="#" data-query="album mexico">🎵 Música</a>
-            <a href="#" data-query="album mexico">🎤 Artistas</a>
-            <a href="#" class="dropdown-toggle">🏳️‍🌈 Países ▼</a>
+            <a href="#" id="linkMusic">🎵 Música</a>
+            <a href="#" id="linkArtists">🎤 Artistas</a>
+            <a href="#" class="dropdown-toggle" id="linkCountries">🏳️‍🌈 Países ▼</a>
             <a href="#" id="linkRandom">🎲 Aleatorio</a>
             <a href="#" id="linkTop">🔥 Top álbumes</a>
             <a href="#" id="linkAbout">ℹ️ Acerca de</a>
         </nav>
     </header>
 
-    <!-- ===== DROPDOWN DE PAÍSES (se muestra al hacer clic en "Países") ===== -->
+    <!-- ===== DROPDOWN DE PAÍSES ===== -->
     <div id="countryDropdown" class="country-dropdown" style="display:none;">
-        <div class="country-grid" id="countryGrid">
-            <!-- Los países se generarán con JavaScript -->
-        </div>
+        <div class="country-grid" id="countryGrid"></div>
     </div>
 
     <!-- ===== CONTENEDOR PRINCIPAL ===== -->
@@ -33,34 +31,41 @@
 
         <!-- ===== COLUMNA IZQUIERDA ===== -->
         <aside class="left-sidebar">
+            <!-- 1. Países -->
             <div class="sidebar-box">
                 <div class="sidebar-title">🌎 Países</div>
-                <div id="countrySidebar" class="country-list">
-                    <!-- Lista de países se generará con JavaScript -->
-                </div>
+                <div id="countrySidebar" class="country-list"></div>
             </div>
 
+            <!-- 2. Top 5 Artistas -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">🎤 Top 5 Artistas</div>
+                <div id="topArtists"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 3. Años con más lanzamientos -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">📅 Años más populares</div>
+                <div id="topYears"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 4. Géneros detectados -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">🎵 Géneros</div>
+                <div id="topGenres"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 5. Estadísticas -->
             <div class="sidebar-box">
                 <div class="sidebar-title">📊 Estadísticas</div>
                 <ul class="sidebar-list">
-                    <li>Total de álbumes <span class="count" id="totalCount">...</span></li>
+                    <li>Total álbumes <span class="count" id="totalCount">...</span></li>
                     <li>Artistas únicos <span class="count" id="artistCount">...</span></li>
                     <li>País actual <span class="count" id="currentCountry">México</span></li>
                 </ul>
             </div>
 
-            <div class="sidebar-box">
-                <div class="sidebar-title">🏷️ Tags populares</div>
-                <div id="tagCloud">
-                    <span class="genre-tag">album</span>
-                    <span class="genre-tag">mexico</span>
-                    <span class="genre-tag">latino</span>
-                    <span class="genre-tag">folk</span>
-                    <span class="genre-tag">rock</span>
-                    <span class="genre-tag">tradicional</span>
-                </div>
-            </div>
-
+            <!-- 6. Acerca de -->
             <div class="sidebar-box">
                 <div class="sidebar-title">ℹ️ Acerca de</div>
                 <p class="about-text">
@@ -94,7 +99,7 @@
                 </div>
             </div>
 
-            <!-- Grid de música -->
+            <!-- Título y Grid -->
             <div class="section-title">
                 <span id="sectionTitle">🎵 Álbumes de México</span>
                 <span>
@@ -120,20 +125,37 @@
 
         <!-- ===== COLUMNA DERECHA ===== -->
         <aside class="right-sidebar">
+            <!-- 1. Escuchando ahora -->
             <div class="right-box">
                 <div class="right-title">🎧 Escuchando ahora</div>
-                <div id="nowPlaying" class="now-playing-text">
-                    Selecciona una canción para reproducir
-                </div>
+                <div id="nowPlaying" class="now-playing-text">Selecciona una canción para reproducir</div>
             </div>
 
+            <!-- 2. Rango de años -->
+            <div class="right-box">
+                <div class="right-title">⏳ Rango de años</div>
+                <div id="yearRange"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 3. Estadísticas rápidas -->
+            <div class="right-box">
+                <div class="right-title">📊 Estadísticas rápidas</div>
+                <div id="quickStats"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 4. Progreso -->
+            <div class="right-box">
+                <div class="right-title">📖 Progreso</div>
+                <div id="progressInfo"><p class="loading-text">Cargando...</p></div>
+            </div>
+
+            <!-- 5. Últimos lanzamientos -->
             <div class="right-box">
                 <div class="right-title">📀 Últimos lanzamientos</div>
-                <div id="recentReleases">
-                    <p class="loading-text">Cargando...</p>
-                </div>
+                <div id="recentReleases"><p class="loading-text">Cargando...</p></div>
             </div>
 
+            <!-- 6. Búsqueda -->
             <div class="right-box">
                 <div class="right-title">🔍 Búsqueda</div>
                 <input type="text" id="searchInput" class="search-input" placeholder="Buscar álbumes...">
