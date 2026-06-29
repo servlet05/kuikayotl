@@ -83,6 +83,21 @@
     }
 
     // ============================================================
+    // FUNCIÓN PARA FILTRAR AÑOS VÁLIDOS
+    // ============================================================
+
+    /**
+     * Filtra años válidos para música grabada
+     * @param {number} year - Año a validar
+     * @returns {boolean} - true si el año es válido
+     */
+    function isValidYear(year) {
+        const currentYear = new Date().getFullYear();
+        // Años válidos: entre 1800 y el año actual + 1
+        return year >= 1800 && year <= currentYear + 1;
+    }
+
+    // ============================================================
     // FUNCIÓN PARA OBTENER EL ARTISTA (priorizando uploader)
     // ============================================================
 
@@ -232,7 +247,7 @@
             if (d.date) {
                 try {
                     const year = new Date(d.date).getFullYear();
-                    if (!isNaN(year)) {
+                    if (!isNaN(year) && isValidYear(year)) {
                         yearCount[year] = (yearCount[year] || 0) + 1;
                     }
                 } catch {}
@@ -245,7 +260,7 @@
 
         topYearsEl.innerHTML = '';
         if (sorted.length === 0) {
-            topYearsEl.innerHTML = '<p class="loading-text">Sin datos de años</p>';
+            topYearsEl.innerHTML = '<p class="loading-text">Sin datos de años válidos</p>';
             return;
         }
 
@@ -326,10 +341,10 @@
         const years = docs
             .filter(d => d.date)
             .map(d => new Date(d.date).getFullYear())
-            .filter(y => !isNaN(y));
+            .filter(y => !isNaN(y) && isValidYear(y));
 
         if (years.length === 0) {
-            yearRangeEl.innerHTML = '<p class="loading-text">Sin datos de años</p>';
+            yearRangeEl.innerHTML = '<p class="loading-text">Sin datos de años válidos</p>';
             return;
         }
 
@@ -352,7 +367,7 @@
                     <span style="color: #0a2a5e; font-weight: bold;">${range} años</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-                    <span>📀 Álbumes</span>
+                    <span>📀 Álbumes con año válido</span>
                     <span style="color: #0a2a5e; font-weight: bold;">${years.length}</span>
                 </div>
             </div>
@@ -368,9 +383,15 @@
         const years = docs
             .filter(d => d.date)
             .map(d => new Date(d.date).getFullYear())
-            .filter(y => !isNaN(y));
+            .filter(y => !isNaN(y) && isValidYear(y));
 
-        const avgPerYear = years.length > 0 ? (years.length / (Math.max(...years) - Math.min(...years) + 1)).toFixed(1) : 'N/A';
+        let avgPerYear = 'N/A';
+        if (years.length > 0) {
+            const minYear = Math.min(...years);
+            const maxYear = Math.max(...years);
+            const yearRange = maxYear - minYear + 1;
+            avgPerYear = (years.length / yearRange).toFixed(1);
+        }
 
         quickStatsEl.innerHTML = `
             <div style="font-size: 0.85rem; line-height: 1.8;">
@@ -430,7 +451,7 @@
         const card = document.createElement('div');
         card.className = 'music-card';
 
-        // ✅ Obtener artista usando uploader primero
+        // Obtener artista usando uploader primero
         const artistName = getArtistName(item);
         const title = sanitizeString(item.title, 'Sin título');
         const creator = sanitizeString(artistName, 'Artista desconocido');
@@ -534,7 +555,12 @@
         if (statArtists) statArtists.textContent = uniqueArtists > 0 ? uniqueArtists : '0';
         if (artistCount) artistCount.textContent = uniqueArtists > 0 ? uniqueArtists : '0';
 
-        const years = docs.filter(d => d.date).map(d => new Date(d.date).getFullYear()).filter(y => !isNaN(y));
+        // ===== AÑOS CON FILTRO DE VALIDEZ =====
+        const years = docs
+            .filter(d => d.date)
+            .map(d => new Date(d.date).getFullYear())
+            .filter(y => !isNaN(y) && isValidYear(y));
+
         if (statYears) {
             if (years.length > 0) {
                 const minYear = Math.min(...years);
