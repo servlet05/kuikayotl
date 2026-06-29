@@ -132,4 +132,32 @@ const API = (function() {
     }
 
     /**
-     * Formatea una fecha
+     * Formatea una fecha para mostrar
+     * @param {string} dateStr - Fecha en formato ISO
+     * @returns {string} - Fecha formateada
+     */
+    function formatDate(dateStr) {
+        if (!dateStr) return 'Fecha desconocida';
+        try {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch {
+            return dateStr;
+        }
+    }
+
+    // ============================================================
+    // EXPORTAR
+    // ============================================================
+
+    return {
+        searchMusic,
+        getItemMetadata,
+        getImageUrl,
+        getAudioUrl,
+        extractArtists,
+        formatDate,
+        CONFIG
+    };
+
+})();
