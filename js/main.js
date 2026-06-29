@@ -31,7 +31,7 @@
     ];
 
     // ===== CONFIGURACIÓN =====
-    let DEFAULT_QUERY = 'album mexico';
+    let DEFAULT_QUERY = 'album mexico music';
     let currentCountry = 'México';
 
     // ===== DOM REFERENCES =====
