@@ -14,7 +14,9 @@ const API = (function() {
         DOWNLOAD_URL: 'https://archive.org/download/'
     };
 
-    // ===== FUNCIONES PÚBLICAS =====
+    // ============================================================
+    // FUNCIÓN PRINCIPAL DE BÚSQUEDA (CORREGIDA)
+    // ============================================================
 
     /**
      * Busca álbumes en Internet Archive
@@ -22,26 +24,16 @@ const API = (function() {
      * @param {number} page - Número de página (0-indexed)
      * @returns {Promise<Object>} - Datos de la respuesta
      */
-   async function searchMusic(query = 'album mexico', page = 0) {
-    const rows = CONFIG.RESULTS_PER_PAGE;
-    // 👇 AGREGAR sort[]=relevance desc al final de la URL
-    const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date&output=json&rows=${rows}&page=${page}&sort[]=relevance desc`;
+    async function searchMusic(query = 'album mexico', page = 0) {
+        const rows = CONFIG.RESULTS_PER_PAGE;
+        // 👇 AGREGAR sort[]=relevance desc al final de la URL
+        const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date&output=json&rows=${rows}&page=${page}&sort[]=relevance desc`;
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return {
-            docs: data.response.docs || [],
-            total: data.response.numFound || 0
-        };
-    } catch (error) {
-        console.error('Error en searchMusic:', error);
-        throw error;
-    }
-}
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             return {
                 docs: data.response.docs || [],
@@ -53,10 +45,12 @@ const API = (function() {
         }
     }
 
+    // ============================================================
+    // FUNCIONES AUXILIARES
+    // ============================================================
+
     /**
      * Obtiene metadatos completos de un ítem por su identificador
-     * @param {string} identifier - Identificador del ítem en Archive.org
-     * @returns {Promise<Object>} - Datos del ítem
      */
     async function getItemMetadata(identifier) {
         try {
@@ -73,8 +67,6 @@ const API = (function() {
 
     /**
      * Obtiene la URL de la portada del álbum
-     * @param {string} identifier - Identificador del ítem
-     * @returns {string|null} - URL de la imagen o null si no existe
      */
     function getImageUrl(identifier) {
         if (!identifier) return null;
@@ -83,8 +75,6 @@ const API = (function() {
 
     /**
      * Obtiene la URL del primer archivo de audio (MP3, OGG, etc.)
-     * @param {string} identifier - Identificador del ítem
-     * @returns {Promise<string|null>} - URL del audio o null
      */
     async function getAudioUrl(identifier) {
         try {
@@ -108,8 +98,6 @@ const API = (function() {
 
     /**
      * Extrae artistas individuales del campo 'creator'
-     * @param {string} creatorStr - Texto del campo creator
-     * @returns {string[]} - Lista de artistas
      */
     function extractArtists(creatorStr) {
         if (!creatorStr || typeof creatorStr !== 'string') return [];
@@ -137,8 +125,6 @@ const API = (function() {
 
     /**
      * Formatea una fecha para mostrar
-     * @param {string} dateStr - Fecha en formato ISO
-     * @returns {string} - Fecha formateada
      */
     function formatDate(dateStr) {
         if (!dateStr) return 'Fecha desconocida';
@@ -150,7 +136,10 @@ const API = (function() {
         }
     }
 
-    // ===== EXPORTAR =====
+    // ============================================================
+    // EXPORTAR
+    // ============================================================
+
     return {
         searchMusic,
         getItemMetadata,
