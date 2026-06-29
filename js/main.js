@@ -7,28 +7,28 @@
     'use strict';
 
     // ===== PAÍSES LATINOAMERICANOS =====
-const LATAM_COUNTRIES = [
-    { name: 'México', flag: '🇲🇽', query: 'music album mexico' },
-    { name: 'Argentina', flag: '🇦🇷', query: 'music album argentina' },
-    { name: 'Colombia', flag: '🇨🇴', query: 'music album colombia' },
-    { name: 'Chile', flag: '🇨🇱', query: 'music album chile' },
-    { name: 'Perú', flag: '🇵🇪', query: 'music album peru' },
-    { name: 'Venezuela', flag: '🇻🇪', query: 'music album venezuela' },
-    { name: 'Brasil', flag: '🇧🇷', query: 'music album brasil' },
-    { name: 'Ecuador', flag: '🇪🇨', query: 'music album ecuador' },
-    { name: 'Guatemala', flag: '🇬🇹', query: 'music album guatemala' },
-    { name: 'Cuba', flag: '🇨🇺', query: 'music album cuba' },
-    { name: 'Bolivia', flag: '🇧🇴', query: 'music album bolivia' },
-    { name: 'República Dominicana', flag: '🇩🇴', query: 'music album republica dominicana' },
-    { name: 'Honduras', flag: '🇭🇳', query: 'music album honduras' },
-    { name: 'Paraguay', flag: '🇵🇾', query: 'music album paraguay' },
-    { name: 'El Salvador', flag: '🇸🇻', query: 'music album el salvador' },
-    { name: 'Nicaragua', flag: '🇳🇮', query: 'music album nicaragua' },
-    { name: 'Costa Rica', flag: '🇨🇷', query: 'music album costa rica' },
-    { name: 'Panamá', flag: '🇵🇦', query: 'music album panama' },
-    { name: 'Uruguay', flag: '🇺🇾', query: 'music album uruguay' },
-    { name: 'Puerto Rico', flag: '🇵🇷', query: 'music album puerto rico' },
-];
+    const LATAM_COUNTRIES = [
+        { name: 'México', flag: '🇲🇽', query: 'music album mexico' },
+        { name: 'Argentina', flag: '🇦🇷', query: 'music album argentina' },
+        { name: 'Colombia', flag: '🇨🇴', query: 'music album colombia' },
+        { name: 'Chile', flag: '🇨🇱', query: 'music album chile' },
+        { name: 'Perú', flag: '🇵🇪', query: 'music album peru' },
+        { name: 'Venezuela', flag: '🇻🇪', query: 'music album venezuela' },
+        { name: 'Brasil', flag: '🇧🇷', query: 'music album brasil' },
+        { name: 'Ecuador', flag: '🇪🇨', query: 'music album ecuador' },
+        { name: 'Guatemala', flag: '🇬🇹', query: 'music album guatemala' },
+        { name: 'Cuba', flag: '🇨🇺', query: 'music album cuba' },
+        { name: 'Bolivia', flag: '🇧🇴', query: 'music album bolivia' },
+        { name: 'República Dominicana', flag: '🇩🇴', query: 'music album republica dominicana' },
+        { name: 'Honduras', flag: '🇭🇳', query: 'music album honduras' },
+        { name: 'Paraguay', flag: '🇵🇾', query: 'music album paraguay' },
+        { name: 'El Salvador', flag: '🇸🇻', query: 'music album el salvador' },
+        { name: 'Nicaragua', flag: '🇳🇮', query: 'music album nicaragua' },
+        { name: 'Costa Rica', flag: '🇨🇷', query: 'music album costa rica' },
+        { name: 'Panamá', flag: '🇵🇦', query: 'music album panama' },
+        { name: 'Uruguay', flag: '🇺🇾', query: 'music album uruguay' },
+        { name: 'Puerto Rico', flag: '🇵🇷', query: 'music album puerto rico' },
+    ];
 
     // ===== CONFIGURACIÓN =====
     let DEFAULT_QUERY = 'music album mexico';
@@ -58,7 +58,7 @@ const LATAM_COUNTRIES = [
     const countrySidebar = document.getElementById('countrySidebar');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
 
-    // Nuevos contenedores para llenar espacios
+    // Contenedores para llenar espacios
     const topArtistsEl = document.getElementById('topArtists');
     const topYearsEl = document.getElementById('topYears');
     const topGenresEl = document.getElementById('topGenres');
@@ -71,6 +71,22 @@ const LATAM_COUNTRIES = [
     let totalResults = 0;
     let currentQuery = DEFAULT_QUERY;
     let allDocs = [];
+
+    // ============================================================
+    // FUNCIÓN AUXILIAR PARA SANITIZAR STRINGS
+    // ============================================================
+
+    /**
+     * Sanitiza un valor para usarlo en HTML (escapa comillas y asegura que sea string)
+     * @param {any} value - Valor a sanitizar
+     * @param {string} fallback - Valor por defecto si es null/undefined
+     * @returns {string} - String sanitizado
+     */
+    function sanitizeString(value, fallback = '') {
+        if (value === null || value === undefined) return fallback;
+        if (typeof value !== 'string') return String(value);
+        return value.replace(/"/g, '&quot;');
+    }
 
     // ============================================================
     // FUNCIONES DE PAÍSES
@@ -147,9 +163,6 @@ const LATAM_COUNTRIES = [
     // FUNCIONES PARA LLENAR ESPACIOS EN BLANCO
     // ============================================================
 
-    /**
-     * Top 5 Artistas
-     */
     function updateTopArtists(docs) {
         if (!topArtistsEl) return;
 
@@ -184,16 +197,13 @@ const LATAM_COUNTRIES = [
                 font-size: 0.85rem;
             `;
             div.innerHTML = `
-                <span>${artist}</span>
+                <span>${sanitizeString(artist)}</span>
                 <span style="color: #6a8aaa; font-size: 0.75rem;">${count}</span>
             `;
             topArtistsEl.appendChild(div);
         });
     }
 
-    /**
-     * Años más populares
-     */
     function updateTopYears(docs) {
         if (!topYearsEl) return;
 
@@ -236,9 +246,6 @@ const LATAM_COUNTRIES = [
         });
     }
 
-    /**
-     * Géneros detectados (basado en palabras clave)
-     */
     function updateTopGenres(docs) {
         if (!topGenresEl) return;
 
@@ -293,9 +300,6 @@ const LATAM_COUNTRIES = [
         });
     }
 
-    /**
-     * Rango de años (más antiguo - más reciente)
-     */
     function updateYearRange(docs) {
         if (!yearRangeEl) return;
 
@@ -335,9 +339,6 @@ const LATAM_COUNTRIES = [
         `;
     }
 
-    /**
-     * Estadísticas rápidas
-     */
     function updateQuickStats(docs) {
         if (!quickStatsEl) return;
 
@@ -349,8 +350,7 @@ const LATAM_COUNTRIES = [
             .map(d => new Date(d.date).getFullYear())
             .filter(y => !isNaN(y));
 
-        const avgPerYear = years.length > 0 ? (years.length / (Math.max(...years) - Math.min(...years) + 1)).toFixed(1) :
-        'N/A';
+        const avgPerYear = years.length > 0 ? (years.length / (Math.max(...years) - Math.min(...years) + 1)).toFixed(1) : 'N/A';
 
         quickStatsEl.innerHTML = `
             <div style="font-size: 0.85rem; line-height: 1.8;">
@@ -378,9 +378,6 @@ const LATAM_COUNTRIES = [
         `;
     }
 
-    /**
-     * Progreso de carga
-     */
     function updateProgressInfo(docs) {
         if (!progressInfoEl) return;
 
@@ -413,11 +410,14 @@ const LATAM_COUNTRIES = [
         const card = document.createElement('div');
         card.className = 'music-card';
 
-        const coverUrl = API.getImageUrl(item.identifier);
-        const title = item.title || 'Sin título';
-        const creator = item.creator || 'Artista desconocido';
+        // ✅ Sanitizar todos los valores que van a HTML
+        const title = sanitizeString(item.title, 'Sin título');
+        const creator = sanitizeString(item.creator, 'Artista desconocido');
         const date = API.formatDate(item.date);
+        const coverUrl = API.getImageUrl(item.identifier);
+        const identifier = item.identifier || '';
 
+        // Cover
         const coverDiv = document.createElement('div');
         coverDiv.className = 'card-cover';
         if (coverUrl) {
@@ -445,30 +445,32 @@ const LATAM_COUNTRIES = [
         }
         card.appendChild(coverDiv);
 
+        // Info
         const infoDiv = document.createElement('div');
         infoDiv.className = 'card-info';
         infoDiv.innerHTML = `
-            <div class="card-title" title="${title.replace(/"/g, '&quot;')}">${title}</div>
-            <div class="card-artist" title="${creator.replace(/"/g, '&quot;')}">${creator}</div>
+            <div class="card-title" title="${title}">${title}</div>
+            <div class="card-artist" title="${creator}">${creator}</div>
             <div class="card-date">${date}</div>
         `;
         card.appendChild(infoDiv);
 
+        // Actions
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'card-actions';
 
         const playBtn = document.createElement('button');
         playBtn.className = 'btn-play';
         playBtn.textContent = '▶ Reproducir';
-        playBtn.dataset.identifier = item.identifier;
+        playBtn.dataset.identifier = identifier;
         playBtn.dataset.title = title;
         playBtn.dataset.artist = creator;
         playBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (window.Kuikayotl && window.Kuikayotl.playTrack) {
-                window.Kuikayotl.playTrack(item.identifier, title, creator);
+                window.Kuikayotl.playTrack(identifier, title, creator);
             } else {
-                Player.playTrack(item.identifier, title, creator, API.getAudioUrl);
+                Player.playTrack(identifier, title, creator, API.getAudioUrl);
             }
         });
         actionsDiv.appendChild(playBtn);
@@ -478,7 +480,7 @@ const LATAM_COUNTRIES = [
         detailBtn.textContent = 'Detalles';
         detailBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            window.open(`https://archive.org/details/${item.identifier}`, '_blank');
+            window.open(`https://archive.org/details/${identifier}`, '_blank');
         });
         actionsDiv.appendChild(detailBtn);
 
@@ -543,8 +545,7 @@ const LATAM_COUNTRIES = [
 
         if (pageInfo) pageInfo.textContent = `Página ${currentPage + 1}`;
         if (paginationInfo) {
-            paginationInfo.textContent = totalResults > 0 ? `de ${Math.ceil(totalResults / API.CONFIG.RESULTS_PER_PAGE)} páginas` :
-                '';
+            paginationInfo.textContent = totalResults > 0 ? `de ${Math.ceil(totalResults / API.CONFIG.RESULTS_PER_PAGE)} páginas` : '';
         }
     }
 
@@ -564,10 +565,12 @@ const LATAM_COUNTRIES = [
                         border-bottom: 1px dotted #e8eef5;
                         font-size: 0.8rem;
                     `;
+                    const title = sanitizeString(item.title, 'Sin título');
+                    const creator = sanitizeString(item.creator, 'Artista desconocido');
                     div.innerHTML = `
-                        <strong>${item.title || 'Sin título'}</strong>
+                        <strong>${title}</strong>
                         <br>
-                        <span style="color: #5a7a9e; font-size: 0.7rem;">${item.creator || 'Artista desconocido'} · ${API.formatDate(item.date)}</span>
+                        <span style="color: #5a7a9e; font-size: 0.7rem;">${creator} · ${API.formatDate(item.date)}</span>
                     `;
                     recentReleases.appendChild(div);
                 });
@@ -660,8 +663,18 @@ const LATAM_COUNTRIES = [
             }
 
             const result = await API.searchMusic(query, page);
+            
+            // Verificar que la respuesta tenga la estructura esperada
+            if (!result || !result.docs) {
+                console.warn('⚠️ La API no devolvió documentos:', result);
+                if (grid) {
+                    grid.innerHTML = `<div class="no-results">No se obtuvieron resultados de la API</div>`;
+                }
+                return;
+            }
+
             const docs = result.docs;
-            totalResults = result.total;
+            totalResults = result.total || 0;
 
             currentQuery = query;
             currentPage = page;
@@ -774,7 +787,7 @@ const LATAM_COUNTRIES = [
                     if (matchedCountry) {
                         selectCountry(matchedCountry);
                     } else {
-                        loadMusic('album ' + query, 0);
+                        loadMusic('music album ' + query, 0);
                         if (sectionTitle) sectionTitle.textContent = `🎵 Búsqueda: "${query}"`;
                         if (currentCountryEl) currentCountryEl.textContent = query;
                     }
