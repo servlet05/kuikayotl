@@ -799,4 +799,76 @@ a:hover {
         padding: 4px 8px;
     }
 }
+    /* ===== DROPDOWN DE PAÍSES - VERSIÓN COMPACTA ===== */
+.country-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #c8d8e8;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 10px 15px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.country-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.country-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 1.8rem;
+    min-width: 36px;
+    height: 44px;
+    background: #f5f9ff;
+    border: 1px solid #e0ecf8;
+}
+
+.country-item:hover {
+    background: #1a5c9e;
+    transform: scale(1.1);
+    border-color: #1a5c9e;
+}
+
+.country-item .flag {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.country-item .country-name {
+    display: none; /* Ocultar el nombre del país */
+}
+
+/* Tooltip para mostrar el nombre al hacer hover */
+.country-item:hover::after {
+    content: attr(data-country);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0a2a5e;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.country-item {
+    position: relative;
+}
 }
