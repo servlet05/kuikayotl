@@ -76,12 +76,6 @@
     // FUNCIÓN AUXILIAR PARA SANITIZAR STRINGS
     // ============================================================
 
-    /**
-     * Sanitiza un valor para usarlo en HTML (escapa comillas y asegura que sea string)
-     * @param {any} value - Valor a sanitizar
-     * @param {string} fallback - Valor por defecto si es null/undefined
-     * @returns {string} - String sanitizado
-     */
     function sanitizeString(value, fallback = '') {
         if (value === null || value === undefined) return fallback;
         if (typeof value !== 'string') return String(value);
@@ -89,46 +83,76 @@
     }
 
     // ============================================================
+    // FUNCIÓN PARA OBTENER EL ARTISTA (priorizando uploader)
+    // ============================================================
+
+    function getArtistName(item) {
+        // 1. Intentar usar 'uploader' primero
+        let artistName = item.uploader || '';
+        
+        // 2. Si no hay uploader, usar 'creator'
+        if (!artistName || artistName === '') {
+            const creators = API.extractArtists(item.creator || '');
+            if (creators.length > 0) {
+                return creators[0]; // Tomar el primer artista
+            }
+            return 'Artista desconocido';
+        }
+
+        // 3. Limpiar el uploader (quitar "_123", guiones, etc.)
+        let cleanArtist = artistName
+            .replace(/_[0-9]+$/, '')  // Quitar "_123" al final
+            .replace(/[-_]/g, ' ')    // Reemplazar guiones por espacios
+            .trim();
+        
+        if (cleanArtist.length > 2) {
+            return cleanArtist;
+        }
+        
+        return 'Artista desconocido';
+    }
+
+    // ============================================================
     // FUNCIONES DE PAÍSES
     // ============================================================
 
-   function renderCountries() {
-    // Dropdown - Solo banderas
-    if (countryGrid) {
-        countryGrid.innerHTML = '';
-        LATAM_COUNTRIES.forEach(country => {
-            const div = document.createElement('div');
-            div.className = 'country-item';
-            div.setAttribute('data-country', country.name);
-            div.innerHTML = `<span class="flag">${country.flag}</span>`;
-            div.addEventListener('click', function() {
-                selectCountry(country);
-                if (countryDropdown) countryDropdown.style.display = 'none';
+    function renderCountries() {
+        // Dropdown - Solo banderas en horizontal
+        if (countryGrid) {
+            countryGrid.innerHTML = '';
+            LATAM_COUNTRIES.forEach(country => {
+                const div = document.createElement('div');
+                div.className = 'country-item';
+                div.setAttribute('data-country', country.name);
+                div.innerHTML = `<span class="flag">${country.flag}</span>`;
+                div.addEventListener('click', function() {
+                    selectCountry(country);
+                    if (countryDropdown) countryDropdown.style.display = 'none';
+                });
+                countryGrid.appendChild(div);
             });
-            countryGrid.appendChild(div);
-        });
-    }
+        }
 
-    // Sidebar - Con bandera y nombre (se mantiene igual)
-    if (countrySidebar) {
-        countrySidebar.innerHTML = '';
-        LATAM_COUNTRIES.forEach(country => {
-            const div = document.createElement('div');
-            div.className = 'country-item';
-            if (country.name === currentCountry) {
-                div.classList.add('active');
-            }
-            div.innerHTML = `
-                <span class="flag">${country.flag}</span>
-                <span class="country-name">${country.name}</span>
-            `;
-            div.addEventListener('click', function() {
-                selectCountry(country);
+        // Sidebar - Con bandera y nombre (vertical)
+        if (countrySidebar) {
+            countrySidebar.innerHTML = '';
+            LATAM_COUNTRIES.forEach(country => {
+                const div = document.createElement('div');
+                div.className = 'country-item';
+                if (country.name === currentCountry) {
+                    div.classList.add('active');
+                }
+                div.innerHTML = `
+                    <span class="flag">${country.flag}</span>
+                    <span class="country-name">${country.name}</span>
+                `;
+                div.addEventListener('click', function() {
+                    selectCountry(country);
+                });
+                countrySidebar.appendChild(div);
             });
-            countrySidebar.appendChild(div);
-        });
+        }
     }
-}
 
     function selectCountry(country) {
         currentCountry = country.name;
@@ -166,12 +190,10 @@
 
         const artistCount = {};
         docs.forEach(d => {
-            const artists = API.extractArtists(d.creator || '');
-            if (artists.length > 0) {
-                artists.forEach(artist => {
-                    const key = artist.toLowerCase();
-                    artistCount[key] = (artistCount[key] || 0) + 1;
-                });
+            const artistName = getArtistName(d);
+            if (artistName && artistName !== 'Artista desconocido') {
+                const key = artistName.toLowerCase();
+                artistCount[key] = (artistCount[key] || 0) + 1;
             }
         });
 
@@ -408,9 +430,10 @@
         const card = document.createElement('div');
         card.className = 'music-card';
 
-        // ✅ Sanitizar todos los valores que van a HTML
+        // ✅ Obtener artista usando uploader primero
+        const artistName = getArtistName(item);
         const title = sanitizeString(item.title, 'Sin título');
-        const creator = sanitizeString(item.creator, 'Artista desconocido');
+        const creator = sanitizeString(artistName, 'Artista desconocido');
         const date = API.formatDate(item.date);
         const coverUrl = API.getImageUrl(item.identifier);
         const identifier = item.identifier || '';
@@ -498,22 +521,12 @@
         if (resultBadge) resultBadge.textContent = `${total} álbumes`;
         if (totalCount) totalCount.textContent = totalResults > 0 ? totalResults : docs.length;
 
+        // ===== CONTEO DE ARTISTAS: PRIORIZAR UPLOADER =====
         const artistSet = new Set();
         docs.forEach(d => {
-            const creators = API.extractArtists(d.creator || '');
-            if (creators.length > 0) {
-                creators.forEach(a => artistSet.add(a.toLowerCase()));
-            } else {
-                const id = d.identifier || '';
-                if (id) {
-                    const parts = id.split('-');
-                    if (parts.length > 0) {
-                        const possibleArtist = parts[0].replace(/[0-9]/g, '').trim();
-                        if (possibleArtist.length > 2 && possibleArtist.length < 20) {
-                            artistSet.add(possibleArtist.toLowerCase());
-                        }
-                    }
-                }
+            const artistName = getArtistName(d);
+            if (artistName && artistName !== 'Artista desconocido') {
+                artistSet.add(artistName.toLowerCase());
             }
         });
 
@@ -564,7 +577,8 @@
                         font-size: 0.8rem;
                     `;
                     const title = sanitizeString(item.title, 'Sin título');
-                    const creator = sanitizeString(item.creator, 'Artista desconocido');
+                    const artistName = getArtistName(item);
+                    const creator = sanitizeString(artistName, 'Artista desconocido');
                     div.innerHTML = `
                         <strong>${title}</strong>
                         <br>
@@ -661,8 +675,7 @@
             }
 
             const result = await API.searchMusic(query, page);
-            
-            // Verificar que la respuesta tenga la estructura esperada
+
             if (!result || !result.docs) {
                 console.warn('⚠️ La API no devolvió documentos:', result);
                 if (grid) {
