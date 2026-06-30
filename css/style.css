@@ -34,7 +34,9 @@ a:hover {
     align-items: center;
     flex-wrap: wrap;
     margin-bottom: 10px;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
@@ -72,8 +74,7 @@ a:hover {
     cursor: pointer;
 }
 
-/* ===== DROPDOWN DE PAÍSES - HORIZONTAL ===== */
-/* ===== DROPDOWN DE PAÍSES - POSICIÓN FIJA ===== */
+/* ===== DROPDOWN DE PAÍSES ===== */
 .country-dropdown {
     position: fixed;
     top: 70px;
@@ -131,7 +132,6 @@ a:hover {
     display: none;
 }
 
-/* Tooltip al hacer hover */
 .country-item:hover::after {
     content: attr(data-country);
     position: absolute;
@@ -148,7 +148,6 @@ a:hover {
     z-index: 10;
 }
 
-/* Scroll personalizado para el dropdown */
 .country-dropdown::-webkit-scrollbar {
     width: 6px;
 }
@@ -173,22 +172,26 @@ a:hover {
     margin: 0 auto;
     padding: 10px 15px;
     display: grid;
-    grid-template-columns: 220px 1fr 280px;
+    grid-template-columns: 240px 1fr 280px;
     gap: 15px;
 }
 
-/* ===== COLUMNA IZQUIERDA ===== */
+/* ============================================================
+   COLUMNA IZQUIERDA - SIDEBAR
+   ============================================================ */
 .left-sidebar {
     background: white;
     border: 1px solid #c8d8e8;
     border-radius: 4px;
     padding: 12px;
+    align-self: start;
 }
 
 .sidebar-box {
     margin-bottom: 18px;
     border-bottom: 1px solid #e0e8f0;
     padding-bottom: 12px;
+    text-align: left;
 }
 
 .sidebar-box:last-child {
@@ -198,7 +201,7 @@ a:hover {
 }
 
 .sidebar-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #4a6a8a;
@@ -206,16 +209,19 @@ a:hover {
     margin-bottom: 8px;
     border-bottom: 2px solid #d0e0f0;
     padding-bottom: 4px;
+    text-align: left;
 }
 
 .sidebar-list {
     list-style: none;
+    text-align: left;
 }
 
 .sidebar-list li {
     padding: 4px 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     border-bottom: 1px dotted #e8eef5;
+    text-align: left;
 }
 
 .sidebar-list li:last-child {
@@ -224,14 +230,17 @@ a:hover {
 
 .sidebar-list .count {
     color: #6a8aaa;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     float: right;
 }
 
+/* ===== LISTA DE PAÍSES ===== */
 .country-list {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .country-list .country-item {
@@ -247,6 +256,8 @@ a:hover {
     border: none;
     height: auto;
     min-width: auto;
+    width: 100%;
+    text-align: left;
 }
 
 .country-list .country-item:hover {
@@ -256,6 +267,7 @@ a:hover {
 
 .country-list .country-item .flag {
     font-size: 1.2rem;
+    flex-shrink: 0;
 }
 
 .country-list .country-item .country-name {
@@ -272,24 +284,86 @@ a:hover {
     color: white;
 }
 
+/* ===== TOP ARTISTAS ===== */
+.artist-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dotted #e8eef5;
+    font-size: 0.85rem;
+}
+
+.artist-item .artist-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+.artist-item .artist-count {
+    color: #6a8aaa;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* ===== AÑOS ===== */
+.year-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dotted #e8eef5;
+    font-size: 0.85rem;
+}
+
+.year-item .year-count {
+    color: #6a8aaa;
+    font-size: 0.75rem;
+}
+
+/* ===== GÉNEROS ===== */
 .genre-tag {
     display: inline-block;
     background: #e8f0fe;
     padding: 2px 10px;
     margin: 2px 3px 2px 0;
     border-radius: 12px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #1a5c9e;
     border: 1px solid #d0e0f0;
+    transition: all 0.2s;
+    cursor: default;
 }
 
+.genre-tag:hover {
+    background: #1a5c9e;
+    color: white;
+    border-color: #1a5c9e;
+}
+
+.genre-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dotted #e8eef5;
+    font-size: 0.85rem;
+}
+
+.genre-item .genre-count {
+    color: #6a8aaa;
+    font-size: 0.75rem;
+}
+
+/* ===== ACERCA DE ===== */
 .about-text {
     font-size: 0.85rem;
     color: #3a5a7e;
     line-height: 1.5;
+    text-align: left;
 }
 
-/* ===== COLUMNA CENTRAL ===== */
+/* ============================================================
+   COLUMNA CENTRAL - MAIN CONTENT
+   ============================================================ */
 .main-content {
     background: white;
     border: 1px solid #c8d8e8;
@@ -313,14 +387,14 @@ a:hover {
 }
 
 .stat-number {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: #0a2a5e;
     line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     color: #5a7a9e;
     letter-spacing: 0.5px;
@@ -350,7 +424,7 @@ a:hover {
 }
 
 .section-title .pagination-info {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #5a7a9e;
     font-weight: normal;
 }
@@ -429,7 +503,7 @@ a:hover {
 }
 
 .card-date {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: #8aaac0;
     margin-top: 2px;
 }
@@ -493,12 +567,8 @@ a:hover {
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .error-message {
@@ -564,12 +634,15 @@ a:hover {
     font-weight: bold;
 }
 
-/* ===== COLUMNA DERECHA ===== */
+/* ============================================================
+   COLUMNA DERECHA - SIDEBAR
+   ============================================================ */
 .right-sidebar {
     background: white;
     border: 1px solid #c8d8e8;
     border-radius: 4px;
     padding: 12px;
+    align-self: start;
 }
 
 .right-box {
@@ -585,7 +658,7 @@ a:hover {
 }
 
 .right-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #4a6a8a;
@@ -598,14 +671,98 @@ a:hover {
 .now-playing-text {
     color: #5a7a9e;
     font-size: 0.85rem;
+    min-height: 40px;
 }
 
+/* ===== RANGO DE AÑOS ===== */
+.range-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px dotted #e8eef5;
+}
+
+.range-item:last-child {
+    border-bottom: none;
+}
+
+.range-item .range-value {
+    color: #0a2a5e;
+    font-weight: bold;
+}
+
+/* ===== ESTADÍSTICAS RÁPIDAS ===== */
+.quick-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-size: 0.85rem;
+}
+
+.quick-stat .stat-value {
+    color: #0a2a5e;
+    font-weight: bold;
+}
+
+/* ===== PROGRESO ===== */
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: #e8eef5;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5c9e, #ffd700);
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+.progress-info-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #6a8aaa;
+}
+
+/* ===== ÚLTIMOS LANZAMIENTOS ===== */
+.release-item {
+    padding: 4px 0;
+    border-bottom: 1px dotted #e8eef5;
+    font-size: 0.8rem;
+}
+
+.release-item:last-child {
+    border-bottom: none;
+}
+
+.release-item .release-title {
+    font-weight: 600;
+    color: #0a2a5e;
+}
+
+.release-item .release-meta {
+    color: #5a7a9e;
+    font-size: 0.7rem;
+}
+
+/* ===== BÚSQUEDA ===== */
 .search-input {
     width: 100%;
     padding: 6px 10px;
     border: 1px solid #d0e0f0;
     border-radius: 4px;
     font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1a5c9e;
 }
 
 .search-button {
@@ -618,6 +775,7 @@ a:hover {
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: background 0.2s;
 }
 
 .search-button:hover {
@@ -629,7 +787,9 @@ a:hover {
     font-size: 0.8rem;
 }
 
-/* ===== FOOTER ===== */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
     background: #0a2a5e;
     color: #b0c8e0;
@@ -689,7 +849,9 @@ a:hover {
     color: #ffd700;
 }
 
-/* ===== REPRODUCTOR ===== */
+/* ============================================================
+   REPRODUCTOR GLOBAL
+   ============================================================ */
 .global-player {
     position: fixed;
     bottom: 0;
@@ -761,7 +923,9 @@ a:hover {
     text-align: right;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 1024px) {
     .container {
         grid-template-columns: 1fr;
@@ -771,7 +935,7 @@ a:hover {
     .left-sidebar,
     .right-sidebar {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 15px;
     }
 
@@ -783,19 +947,47 @@ a:hover {
     }
 }
 
+@media (max-width: 768px) {
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .music-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .country-dropdown {
+        top: 60px;
+        max-height: 150px;
+    }
+
+    .country-grid {
+        gap: 4px;
+    }
+
+    .country-item {
+        font-size: 1.3rem;
+        min-width: 28px;
+        height: 32px;
+    }
+}
+
 @media (max-width: 600px) {
     .header {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
+        padding: 8px 12px;
     }
 
     .header-links {
         justify-content: center;
+        gap: 8px;
+        font-size: 0.75rem;
     }
 
-    .stats-bar {
-        grid-template-columns: repeat(2, 1fr);
+    .header-links a {
+        padding: 2px 6px;
     }
 
     .footer-content {
@@ -803,12 +995,8 @@ a:hover {
         gap: 15px;
     }
 
-    .music-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .container {
-        padding: 10px;
+        padding: 8px;
     }
 
     .global-player {
@@ -826,5 +1014,81 @@ a:hover {
     .section-title {
         flex-direction: column;
         align-items: flex-start;
+        font-size: 0.95rem;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .left-sidebar,
+    .right-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .stat-number {
+        font-size: 1.3rem;
+    }
+
+    .music-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .country-dropdown {
+        top: 55px;
+        max-height: 120px;
+        padding: 8px 10px;
+        max-width: 95%;
+    }
+
+    .country-item {
+        font-size: 1.1rem;
+        min-width: 24px;
+        height: 28px;
+        padding: 2px 4px;
+    }
+
+    .pagination {
+        gap: 4px;
+    }
+
+    .pagination button {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+
+    .pagination .page-numbers button {
+        min-width: 28px;
+        padding: 4px 6px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .music-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .card-title {
+        font-size: 0.75rem;
+    }
+
+    .card-artist {
+        font-size: 0.65rem;
+    }
+
+    .btn-play,
+    .btn-detail {
+        font-size: 0.65rem;
+        padding: 2px 6px;
     }
 }
