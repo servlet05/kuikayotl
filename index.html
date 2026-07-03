@@ -31,48 +31,55 @@
 
         <!-- ===== COLUMNA IZQUIERDA ===== -->
         <aside class="left-sidebar">
-            <!-- 1. Países -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">🌎 Países</div>
-                <div id="countrySidebar" class="country-list"></div>
+            <!-- Botón toggle para móviles -->
+            <div class="sidebar-toggle" id="sidebarToggle">
+                <span class="icon">☰</span> Países y filtros
             </div>
 
-            <!-- 2. Top 5 Artistas -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">🎤 Top 5 Artistas</div>
-                <div id="topArtists"><p class="loading-text">Cargando...</p></div>
-            </div>
+            <div class="sidebar-content" id="sidebarContent">
+                <!-- 1. Países -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">🌎 Países</div>
+                    <div id="countrySidebar" class="country-list"></div>
+                </div>
 
-            <!-- 3. Años con más lanzamientos -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">📅 Años más populares</div>
-                <div id="topYears"><p class="loading-text">Cargando...</p></div>
-            </div>
+                <!-- 2. Top 5 Artistas -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">🎤 Top 5 Artistas</div>
+                    <div id="topArtists"><p class="loading-text">Cargando...</p></div>
+                </div>
 
-            <!-- 4. Géneros detectados -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">🎵 Géneros</div>
-                <div id="topGenres"><p class="loading-text">Cargando...</p></div>
-            </div>
+                <!-- 3. Años con más lanzamientos -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">📅 Años más populares</div>
+                    <div id="topYears"><p class="loading-text">Cargando...</p></div>
+                </div>
 
-            <!-- 5. Estadísticas -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">📊 Estadísticas</div>
-                <ul class="sidebar-list">
-                    <li>Total álbumes <span class="count" id="totalCount">...</span></li>
-                    <li>Artistas únicos <span class="count" id="artistCount">...</span></li>
-                    <li>País actual <span class="count" id="currentCountry">México</span></li>
-                </ul>
-            </div>
+                <!-- 4. Géneros detectados -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">🎵 Géneros</div>
+                    <div id="topGenres"><p class="loading-text">Cargando...</p></div>
+                </div>
 
-            <!-- 6. Acerca de -->
-            <div class="sidebar-box">
-                <div class="sidebar-title">ℹ️ Acerca de</div>
-                <p class="about-text">
-                    Kuikayotl muestra álbumes musicales de Latinoamérica alojados en
-                    <a href="https://archive.org" target="_blank">Internet Archive</a>.
-                    Haz clic en un país para explorar su música.
-                </p>
+                <!-- 5. Estadísticas -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">📊 Estadísticas</div>
+                    <ul class="sidebar-list">
+                        <li>Total álbumes <span class="count" id="totalCount">...</span></li>
+                        <li>Artistas únicos <span class="count" id="artistCount">...</span></li>
+                        <li>País actual <span class="count" id="currentCountry">México</span></li>
+                    </ul>
+                </div>
+
+                <!-- 6. Acerca de -->
+                <div class="sidebar-box">
+                    <div class="sidebar-title">ℹ️ Acerca de</div>
+                    <p class="about-text">
+                        Kuikayotl muestra álbumes musicales de Latinoamérica alojados en
+                        <a href="https://archive.org" target="_blank">Internet Archive</a>.
+                        Haz clic en un país para explorar su música.
+                    </p>
+                </div>
             </div>
         </aside>
 
