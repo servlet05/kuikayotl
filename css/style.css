@@ -177,6 +177,38 @@ a:hover {
 }
 
 /* ============================================================
+   SIDEBAR TOGGLE PARA MÓVILES
+   ============================================================ */
+.sidebar-toggle {
+    display: none;
+    background: #1a5c9e;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.sidebar-toggle:hover {
+    background: #0a3a6e;
+}
+
+.sidebar-toggle .icon {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+.sidebar-content {
+    display: block;
+    transition: max-height 0.3s ease;
+}
+
+/* ============================================================
    COLUMNA IZQUIERDA - SIDEBAR
    ============================================================ */
 .left-sidebar {
@@ -924,8 +956,10 @@ a:hover {
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE - TABLETS Y MÓVILES
    ============================================================ */
+
+/* Tablets */
 @media (max-width: 1024px) {
     .container {
         grid-template-columns: 1fr;
@@ -934,35 +968,55 @@ a:hover {
 
     .left-sidebar,
     .right-sidebar {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
+        display: block;
     }
 
-    .sidebar-box,
-    .right-box {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-bottom: 0;
+    .left-sidebar .sidebar-box,
+    .right-sidebar .right-box {
+        border-bottom: 1px solid #e0e8f0;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
     }
 }
 
+/* Móviles grandes y tablets pequeñas */
 @media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .sidebar-content {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0;
+        transition: max-height 0.3s ease;
+    }
+
+    .sidebar-content.open {
+        max-height: 2000px;
+        padding: 5px 0;
+    }
+
+    .left-sidebar {
+        padding: 10px;
+    }
+
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 8px;
     }
 
     .music-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .country-dropdown {
         top: 60px;
         max-height: 150px;
-    }
-
-    .country-grid {
-        gap: 4px;
+        padding: 8px 10px;
+        max-width: 95%;
     }
 
     .country-item {
@@ -972,88 +1026,66 @@ a:hover {
     }
 }
 
-@media (max-width: 600px) {
+/* Móviles pequeños */
+@media (max-width: 480px) {
     .header {
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
-        padding: 8px 12px;
+        gap: 6px;
+        padding: 6px 10px;
     }
 
     .header-links {
         justify-content: center;
-        gap: 8px;
-        font-size: 0.75rem;
+        gap: 6px;
+        font-size: 0.7rem;
     }
 
     .header-links a {
         padding: 2px 6px;
     }
 
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .container {
-        padding: 8px;
-    }
-
-    .global-player {
-        flex-wrap: wrap;
-        height: auto;
-        padding: 6px 10px;
-        gap: 8px;
-    }
-
-    .player-progress {
-        flex: 1 1 100%;
-        order: 10;
-    }
-
-    .section-title {
-        flex-direction: column;
-        align-items: flex-start;
-        font-size: 0.95rem;
-    }
-
     .logo {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         text-align: center;
     }
 
-    .left-sidebar,
-    .right-sidebar {
-        grid-template-columns: 1fr;
+    .container {
+        padding: 6px;
+    }
+
+    .main-content {
+        padding: 10px;
     }
 
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-        padding: 8px;
+        gap: 4px;
+        padding: 6px;
     }
 
     .stat-number {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.55rem;
     }
 
     .music-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 8px;
     }
 
-    .country-dropdown {
-        top: 55px;
-        max-height: 120px;
-        padding: 8px 10px;
-        max-width: 95%;
+    .section-title {
+        font-size: 0.9rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
     }
 
-    .country-item {
-        font-size: 1.1rem;
-        min-width: 24px;
-        height: 28px;
-        padding: 2px 4px;
+    .section-title .badge {
+        font-size: 0.6rem;
     }
 
     .pagination {
@@ -1061,34 +1093,101 @@ a:hover {
     }
 
     .pagination button {
-        padding: 4px 10px;
-        font-size: 0.75rem;
+        padding: 4px 8px;
+        font-size: 0.7rem;
     }
 
     .pagination .page-numbers button {
-        min-width: 28px;
-        padding: 4px 6px;
+        min-width: 24px;
+        padding: 4px 5px;
+        font-size: 0.7rem;
+    }
+
+    .global-player {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 4px 8px;
+        gap: 4px;
+    }
+
+    .player-controls button {
+        font-size: 1rem;
+    }
+
+    .player-info {
+        font-size: 0.65rem;
+        min-width: 60px;
+    }
+
+    .player-time {
+        font-size: 0.6rem;
+        min-width: 40px;
+    }
+
+    .footer {
+        padding: 12px 15px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .footer-description {
         font-size: 0.75rem;
     }
-}
 
-@media (max-width: 400px) {
-    .music-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+    .sidebar-toggle {
+        font-size: 0.8rem;
+        padding: 8px 12px;
     }
 
-    .card-title {
-        font-size: 0.75rem;
-    }
-
-    .card-artist {
+    .sidebar-title {
         font-size: 0.65rem;
     }
 
-    .btn-play,
-    .btn-detail {
+    .country-list .country-item {
+        font-size: 0.75rem;
+        padding: 3px 6px;
+    }
+
+    .country-list .country-item .flag {
+        font-size: 1rem;
+    }
+
+    .right-sidebar {
+        padding: 8px;
+    }
+
+    .right-box {
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    .right-title {
         font-size: 0.65rem;
-        padding: 2px 6px;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+        padding: 5px 8px;
+    }
+
+    .search-button {
+        font-size: 0.8rem;
+        padding: 5px;
+    }
+
+    .country-dropdown {
+        top: 50px;
+        max-height: 100px;
+        padding: 5px 8px;
+    }
+
+    .country-item {
+        font-size: 1rem;
+        min-width: 22px;
+        height: 26px;
+        padding: 2px 3px;
     }
 }
