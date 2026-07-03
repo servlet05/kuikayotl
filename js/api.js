@@ -18,15 +18,8 @@ const API = (function() {
     // FUNCIÓN PRINCIPAL DE BÚSQUEDA
     // ============================================================
 
-    /**
-     * Busca álbumes en Internet Archive
-     * @param {string} query - Término de búsqueda (ej: "album mexico")
-     * @param {number} page - Número de página (0-indexed)
-     * @returns {Promise<Object>} - Datos de la respuesta
-     */
     async function searchMusic(query = 'album mexico', page = 0) {
         const rows = CONFIG.RESULTS_PER_PAGE;
-        // ✅ Incluir 'uploader' en los campos solicitados
         const url = `${CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader&output=json&rows=${rows}&page=${page}&sort[]=publicdate desc`;
 
         try {
@@ -49,11 +42,6 @@ const API = (function() {
     // FUNCIONES AUXILIARES
     // ============================================================
 
-    /**
-     * Obtiene metadatos completos de un ítem por su identificador
-     * @param {string} identifier - Identificador del ítem en Archive.org
-     * @returns {Promise<Object>} - Datos del ítem
-     */
     async function getItemMetadata(identifier) {
         try {
             const response = await fetch(`${CONFIG.METADATA_URL}${identifier}`);
@@ -67,21 +55,11 @@ const API = (function() {
         }
     }
 
-    /**
-     * Obtiene la URL de la portada del álbum
-     * @param {string} identifier - Identificador del ítem
-     * @returns {string|null} - URL de la imagen o null si no existe
-     */
     function getImageUrl(identifier) {
         if (!identifier) return null;
         return `${CONFIG.DOWNLOAD_URL}${identifier}/__ia_thumb.jpg`;
     }
 
-    /**
-     * Obtiene la URL del primer archivo de audio (MP3, OGG, etc.)
-     * @param {string} identifier - Identificador del ítem
-     * @returns {Promise<string|null>} - URL del audio o null
-     */
     async function getAudioUrl(identifier) {
         try {
             const data = await getItemMetadata(identifier);
@@ -102,11 +80,6 @@ const API = (function() {
         }
     }
 
-    /**
-     * Extrae artistas individuales del campo 'creator'
-     * @param {string} creatorStr - Texto del campo creator
-     * @returns {string[]} - Lista de artistas
-     */
     function extractArtists(creatorStr) {
         if (!creatorStr || typeof creatorStr !== 'string') return [];
 
@@ -131,11 +104,6 @@ const API = (function() {
             .filter(p => !/^(various|unknown|anonymous|none)$/i.test(p));
     }
 
-    /**
-     * Formatea una fecha para mostrar
-     * @param {string} dateStr - Fecha en formato ISO
-     * @returns {string} - Fecha formateada
-     */
     function formatDate(dateStr) {
         if (!dateStr) return 'Fecha desconocida';
         try {

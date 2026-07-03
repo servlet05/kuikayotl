@@ -86,14 +86,8 @@
     // FUNCIÓN PARA FILTRAR AÑOS VÁLIDOS
     // ============================================================
 
-    /**
-     * Filtra años válidos para música grabada
-     * @param {number} year - Año a validar
-     * @returns {boolean} - true si el año es válido
-     */
     function isValidYear(year) {
         const currentYear = new Date().getFullYear();
-        // Años válidos: entre 1800 y el año actual + 1
         return year >= 1800 && year <= currentYear + 1;
     }
 
@@ -102,22 +96,19 @@
     // ============================================================
 
     function getArtistName(item) {
-        // 1. Intentar usar 'uploader' primero
         let artistName = item.uploader || '';
         
-        // 2. Si no hay uploader, usar 'creator'
         if (!artistName || artistName === '') {
             const creators = API.extractArtists(item.creator || '');
             if (creators.length > 0) {
-                return creators[0]; // Tomar el primer artista
+                return creators[0];
             }
             return 'Artista desconocido';
         }
 
-        // 3. Limpiar el uploader (quitar "_123", guiones, etc.)
         let cleanArtist = artistName
-            .replace(/_[0-9]+$/, '')  // Quitar "_123" al final
-            .replace(/[-_]/g, ' ')    // Reemplazar guiones por espacios
+            .replace(/_[0-9]+$/, '')
+            .replace(/[-_]/g, ' ')
             .trim();
         
         if (cleanArtist.length > 2) {
@@ -132,7 +123,6 @@
     // ============================================================
 
     function renderCountries() {
-        // Dropdown - Solo banderas en horizontal
         if (countryGrid) {
             countryGrid.innerHTML = '';
             LATAM_COUNTRIES.forEach(country => {
@@ -148,7 +138,6 @@
             });
         }
 
-        // Sidebar - Con bandera y nombre (vertical)
         if (countrySidebar) {
             countrySidebar.innerHTML = '';
             LATAM_COUNTRIES.forEach(country => {
@@ -163,6 +152,8 @@
                 `;
                 div.addEventListener('click', function() {
                     selectCountry(country);
+                    // Cerrar sidebar en móviles al seleccionar un país
+                    closeSidebarMobile();
                 });
                 countrySidebar.appendChild(div);
             });
@@ -194,6 +185,21 @@
         }
 
         loadMusic(country.query, 0);
+    }
+
+    // ============================================================
+    // FUNCIÓN PARA CERRAR SIDEBAR EN MÓVILES
+    // ============================================================
+
+    function closeSidebarMobile() {
+        const sidebarContent = document.getElementById('sidebarContent');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (window.innerWidth <= 768 && sidebarContent && sidebarContent.classList.contains('open')) {
+            sidebarContent.classList.remove('open');
+            if (sidebarToggle) {
+                sidebarToggle.innerHTML = '<span class="icon">☰</span> Países y filtros';
+            }
+        }
     }
 
     // ============================================================
@@ -451,7 +457,6 @@
         const card = document.createElement('div');
         card.className = 'music-card';
 
-        // Obtener artista usando uploader primero
         const artistName = getArtistName(item);
         const title = sanitizeString(item.title, 'Sin título');
         const creator = sanitizeString(artistName, 'Artista desconocido');
@@ -459,7 +464,6 @@
         const coverUrl = API.getImageUrl(item.identifier);
         const identifier = item.identifier || '';
 
-        // Cover
         const coverDiv = document.createElement('div');
         coverDiv.className = 'card-cover';
         if (coverUrl) {
@@ -487,7 +491,6 @@
         }
         card.appendChild(coverDiv);
 
-        // Info
         const infoDiv = document.createElement('div');
         infoDiv.className = 'card-info';
         infoDiv.innerHTML = `
@@ -497,7 +500,6 @@
         `;
         card.appendChild(infoDiv);
 
-        // Actions
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'card-actions';
 
@@ -542,7 +544,6 @@
         if (resultBadge) resultBadge.textContent = `${total} álbumes`;
         if (totalCount) totalCount.textContent = totalResults > 0 ? totalResults : docs.length;
 
-        // ===== CONTEO DE ARTISTAS: PRIORIZAR UPLOADER =====
         const artistSet = new Set();
         docs.forEach(d => {
             const artistName = getArtistName(d);
@@ -555,7 +556,6 @@
         if (statArtists) statArtists.textContent = uniqueArtists > 0 ? uniqueArtists : '0';
         if (artistCount) artistCount.textContent = uniqueArtists > 0 ? uniqueArtists : '0';
 
-        // ===== AÑOS CON FILTRO DE VALIDEZ =====
         const years = docs
             .filter(d => d.date)
             .map(d => new Date(d.date).getFullYear())
@@ -719,7 +719,6 @@
 
             updateStats(docs);
 
-            // ===== LLENAR ESPACIOS EN BLANCO =====
             updateTopArtists(docs);
             updateTopYears(docs);
             updateTopGenres(docs);
@@ -775,7 +774,22 @@
         Player.init();
         renderCountries();
 
-        // Toggle dropdown
+        // ===== SIDEBAR TOGGLE PARA MÓVILES =====
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarContent = document.getElementById('sidebarContent');
+
+        if (sidebarToggle && sidebarContent) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebarContent.classList.toggle('open');
+                if (sidebarContent.classList.contains('open')) {
+                    sidebarToggle.innerHTML = '<span class="icon">✕</span> Cerrar filtros';
+                } else {
+                    sidebarToggle.innerHTML = '<span class="icon">☰</span> Países y filtros';
+                }
+            });
+        }
+
+        // Toggle dropdown de países
         if (dropdownToggle && countryDropdown) {
             dropdownToggle.addEventListener('click', function(e) {
                 e.preventDefault();

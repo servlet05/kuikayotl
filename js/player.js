@@ -54,13 +54,6 @@ const Player = (function() {
 
     // ===== FUNCIONES PÚBLICAS =====
 
-    /**
-     * Reproduce una pista por su identificador
-     * @param {string} identifier - Identificador del ítem en Archive.org
-     * @param {string} title - Título de la canción/álbum
-     * @param {string} artist - Nombre del artista
-     * @param {Function} getAudioUrlFn - Función para obtener la URL del audio
-     */
     async function playTrack(identifier, title, artist, getAudioUrlFn) {
         if (!getAudioUrlFn || typeof getAudioUrlFn !== 'function') {
             console.error('getAudioUrlFn no está definida');
@@ -88,9 +81,6 @@ const Player = (function() {
         }
     }
 
-    /**
-     * Alterna entre reproducir y pausar
-     */
     function togglePlayPause() {
         if (audio.paused) {
             audio.play();
@@ -101,9 +91,6 @@ const Player = (function() {
         }
     }
 
-    /**
-     * Reproduce la siguiente canción de la lista
-     */
     function playNext() {
         if (playlist.length === 0) return;
         const nextIndex = (currentTrackIndex + 1) % playlist.length;
@@ -111,9 +98,6 @@ const Player = (function() {
         return track;
     }
 
-    /**
-     * Reproduce la canción anterior de la lista
-     */
     function playPrev() {
         if (playlist.length === 0) return;
         const prevIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
@@ -121,23 +105,14 @@ const Player = (function() {
         return track;
     }
 
-    /**
-     * Obtiene la playlist actual
-     */
     function getPlaylist() {
         return [...playlist];
     }
 
-    /**
-     * Obtiene el índice de la canción actual
-     */
     function getCurrentIndex() {
         return currentTrackIndex;
     }
 
-    /**
-     * Inicializa el reproductor con los event listeners
-     */
     function init() {
         if (btnPlayPause) {
             btnPlayPause.addEventListener('click', togglePlayPause);
