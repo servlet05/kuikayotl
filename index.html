@@ -26,7 +26,7 @@
         }
 
         /* ============================================================
-           HEADER (estilo three.js)
+           HEADER
            ============================================================ */
         .header {
             display: flex;
@@ -83,7 +83,6 @@
             background: rgba(139, 92, 246, 0.12);
         }
 
-        /* ===== DROPDOWN DE PAÍSES ===== */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -154,7 +153,7 @@
         }
 
         /* ============================================================
-           LAYOUT PRINCIPAL
+           LAYOUT
            ============================================================ */
         .main {
             display: flex;
@@ -163,7 +162,7 @@
         }
 
         /* ============================================================
-           SIDEBAR IZQUIERDO (Artistas + Géneros)
+           SIDEBAR
            ============================================================ */
         .sidebar {
             width: 200px;
@@ -285,7 +284,6 @@
             border-radius: 4px;
         }
 
-        /* ===== TARJETA DE PORTADA ===== */
         .cover-card {
             background: rgba(20, 20, 40, 0.5);
             backdrop-filter: blur(10px);
@@ -527,7 +525,7 @@
         }
 
         /* ============================================================
-           PANEL DERECHO (Reproductor)
+           PANEL DERECHO
            ============================================================ */
         .right-panel {
             width: 220px;
@@ -962,7 +960,7 @@
             async searchMusic(query, page = 0) {
                 const rows = this.CONFIG.RESULTS_PER_PAGE;
                 const url =
-                    `${this.CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader,downloads&output=json&rows=${rows}&page=${page}&sort[]=downloads desc`;
+                    `${this.CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader,downloads&output=json&rows=${rows}&page=${page}&sort[]=date desc`;
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
@@ -1063,7 +1061,7 @@
             currentIndex: 0,
             isPlaying: false,
             audio: null,
-            filter: 'all', // 'all' | 'artist' | 'top'
+            filter: 'all',
             filterValue: null,
             displayAlbums: [],
         };
@@ -1217,6 +1215,15 @@
                     downloads: doc.downloads || 0,
                 }));
 
+                // ============================================================
+                // 🔥 ORDENAR POR FECHA (MÁS RECIENTE PRIMERO)
+                // ============================================================
+                albums.sort((a, b) => {
+                    const dateA = a.date ? new Date(a.date) : new Date(0);
+                    const dateB = b.date ? new Date(b.date) : new Date(0);
+                    return dateB - dateA;
+                });
+
                 state.allAlbums = albums;
                 state.totalAlbums = result.total;
                 state.totalPages = Math.ceil(result.total / API.CONFIG.RESULTS_PER_PAGE);
@@ -1230,7 +1237,7 @@
 
                 loadingText.style.display = 'none';
 
-                // Seleccionar el primero
+                // Seleccionar el primero (el más reciente)
                 if (albums.length > 0) {
                     selectAlbum(albums[0], 0);
                 }
@@ -1241,7 +1248,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 loadingText.innerHTML =
-                `<div style="color:#ef4444;opacity:0.5;">❌ ${error.message}</div>`;
+                    `<div style="color:#ef4444;opacity:0.5;">❌ ${error.message}</div>`;
             }
         }
 
@@ -1280,6 +1287,15 @@
                 card.addEventListener('click', () => {
                     selectAlbum(album, index);
                 });
+
+                // Mostrar año en la esquina inferior (opcional)
+                if (album.year) {
+                    const yearBadge = document.createElement('div');
+                    yearBadge.style.cssText =
+                        'position:absolute;bottom:2.2rem;left:0.3rem;font-size:0.45rem;color:#94a3b8;opacity:0.3;background:rgba(0,0,0,0.4);padding:0.05rem 0.3rem;border-radius:4px;';
+                    yearBadge.textContent = album.year;
+                    card.appendChild(yearBadge);
+                }
 
                 coversGrid.appendChild(card);
             });
@@ -1361,13 +1377,8 @@
 
         // Actualizar lista de recientes
         function updateRecentList(albums) {
-            const sorted = [...albums].sort((a, b) => {
-                const da = a.date ? new Date(a.date) : 0;
-                const db = b.date ? new Date(b.date) : 0;
-                return db - da;
-            });
-
-            const recent = sorted.slice(0, 5);
+            // Ya están ordenados por fecha, tomamos los primeros 5
+            const recent = albums.slice(0, 5);
             if (recent.length === 0) {
                 recentList.innerHTML = '<span style="opacity:0.3;">Sin lanzamientos</span>';
                 return;
@@ -1650,7 +1661,6 @@
             if (state.displayAlbums.length === 0) return;
             const randomIdx = Math.floor(Math.random() * state.displayAlbums.length);
             selectAlbum(state.displayAlbums[randomIdx], randomIdx);
-            // Scroll a la portada
             const cards = document.querySelectorAll('.cover-card');
             if (cards[randomIdx]) {
                 cards[randomIdx].scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -1666,16 +1676,13 @@
             updateUI(sorted);
             updateStats(sorted);
             if (sorted.length > 0) selectAlbum(sorted[0], 0);
-            // Destacar en sidebar
             document.querySelectorAll('.sidebar-item[data-artist]').forEach(el => el.classList.remove('active'));
         });
 
         // === Artistas ===
         linkArtists.addEventListener('click', (e) => {
             e.preventDefault();
-            // Scroll al sidebar de artistas
             document.getElementById('sidebar').scrollTop = 0;
-            // Resaltar el primer artista
             const firstArtist = artistList.querySelector('.sidebar-item[data-artist]');
             if (firstArtist) firstArtist.click();
         });
@@ -1696,11 +1703,9 @@
         // 13. SIDEBAR - PAÍSES
         // ============================================================
         function renderSidebarCountries() {
-            // Ya están en el dropdown, pero añadimos algunos principales en el sidebar
             const mainCountries = ['mexico', 'argentina', 'colombia', 'chile', 'peru', 'brasil', 'cuba'];
             const sidebarCountries = COUNTRIES.filter(c => mainCountries.includes(c.id));
 
-            // Insertar en el sidebar después del título de países
             const countrySection = document.querySelector('.sidebar-title:first-of-type');
             if (countrySection) {
                 const container = document.createElement('div');
@@ -1761,7 +1766,7 @@
         loadCountry('mexico');
         animate();
 
-        console.log('🚀 Kuikayotl 3D con todas las funcionalidades');
+        console.log('🚀 Kuikayotl 3D · Álbumes ordenados del más reciente al más antiguo');
         console.log(`📀 ${COUNTRIES.length} países disponibles`);
 
         // Exponer para debugging
