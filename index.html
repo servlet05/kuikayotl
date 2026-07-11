@@ -957,19 +957,18 @@
                 DOWNLOAD_URL: 'https://archive.org/download/'
             },
 
-           async searchMusic(query, page = 0) {
-    const rows = this.CONFIG.RESULTS_PER_PAGE;
-    // ✨ CAMBIO CLAVE: publicdate en lugar de date
-    const url =
-        `${this.CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader,downloads&output=json&rows=${rows}&page=${page}&sort[]=publicdate desc`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    return {
-        docs: data.response.docs || [],
-        total: data.response.numFound || 0
-    };
-}
+            async searchMusic(query, page = 0) {
+                const rows = this.CONFIG.RESULTS_PER_PAGE;
+                const url =
+                    `${this.CONFIG.BASE_URL}?q=${encodeURIComponent(query)} AND mediatype:audio&fl[]=identifier,title,creator,description,date,uploader,downloads&output=json&rows=${rows}&page=${page}&sort[]=publicdate desc`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                return {
+                    docs: data.response.docs || [],
+                    total: data.response.numFound || 0
+                };
+            },
 
             async getItemMetadata(identifier) {
                 const response = await fetch(`${this.CONFIG.METADATA_URL}${identifier}`);
