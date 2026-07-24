@@ -3,803 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kuikayotl 3D · Música Latinoamericana</title>
+    <title>Kuikayotl · Música Latinoamericana</title>
 
-    <style>
-        /* ============================================================
-           RESET Y BASE
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="style.css" />
 
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a12;
-            color: #e2e8f0;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ============================================================
-           HEADER
-           ============================================================ */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 1.5rem;
-            background: rgba(16, 16, 30, 0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.06);
-            flex-shrink: 0;
-            z-index: 20;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-        }
-
-        .logo {
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .logo small {
-            font-size: 0.55rem;
-            font-weight: 300;
-            -webkit-text-fill-color: #94a3b8;
-            opacity: 0.4;
-        }
-
-        .header-links {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .header-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 0.15rem 0.4rem;
-            border-radius: 6px;
-            cursor: pointer;
-            position: relative;
-        }
-        .header-links a:hover {
-            color: #e2e8f0;
-            background: rgba(139, 92, 246, 0.08);
-        }
-        .header-links a.active {
-            color: #e2e8f0;
-            background: rgba(139, 92, 246, 0.12);
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: rgba(16, 16, 30, 0.98);
-            backdrop-filter: blur(20px);
-            min-width: 180px;
-            max-height: 300px;
-            overflow-y: auto;
-            border-radius: 12px;
-            border: 1px solid rgba(139, 92, 246, 0.08);
-            padding: 0.4rem;
-            z-index: 30;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-        .dropdown-content.show {
-            display: block;
-        }
-        .dropdown-content::-webkit-scrollbar {
-            width: 4px;
-        }
-        .dropdown-content::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 4px;
-        }
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-size: 0.75rem;
-            font-family: inherit;
-        }
-        .dropdown-item:hover {
-            background: rgba(139, 92, 246, 0.06);
-            color: #e2e8f0;
-        }
-        .dropdown-item .flag {
-            font-size: 1rem;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.65rem;
-            color: #94a3b8;
-            opacity: 0.5;
-        }
-        .header-right .badge {
-            background: rgba(139, 92, 246, 0.06);
-            padding: 0.1rem 0.5rem;
-            border-radius: 10px;
-            border: 1px solid rgba(139, 92, 246, 0.04);
-        }
-
-        /* ============================================================
-           LAYOUT
-           ============================================================ */
-        .main {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* ============================================================
-           SIDEBAR
-           ============================================================ */
-        .sidebar {
-            width: 200px;
-            min-width: 200px;
-            background: rgba(12, 12, 24, 0.95);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(139, 92, 246, 0.06);
-            padding: 0.8rem 0.4rem;
-            overflow-y: auto;
-            flex-shrink: 0;
-            z-index: 10;
-        }
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 4px;
-        }
-
-        .sidebar-title {
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #94a3b8;
-            opacity: 0.3;
-            padding: 0 0.6rem;
-            margin: 0.6rem 0 0.2rem 0;
-        }
-        .sidebar-title:first-of-type {
-            margin-top: 0;
-        }
-
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-size: 0.72rem;
-            font-family: inherit;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .sidebar-item:hover {
-            background: rgba(139, 92, 246, 0.06);
-            color: #e2e8f0;
-        }
-        .sidebar-item.active {
-            background: rgba(139, 92, 246, 0.12);
-            color: #e2e8f0;
-            border-left: 2px solid #8b5cf6;
-        }
-        .sidebar-item .count {
-            font-size: 0.5rem;
-            opacity: 0.3;
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.05rem 0.4rem;
-            border-radius: 10px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-divider {
-            border: none;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            margin: 0.4rem 0.6rem;
-        }
-
-        /* ============================================================
-           PANEL CENTRAL
-           ============================================================ */
-        .three-container {
-            flex: 1;
-            position: relative;
-            background: #0a0a12;
-            overflow: hidden;
-        }
-        #three-canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-
-        /* ============================================================
-           GRID DE PORTADAS
-           ============================================================ */
-        .covers-grid {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 5;
-            padding: 1rem 1.5rem 4rem;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 0.8rem;
-            align-content: start;
-        }
-        .covers-grid::-webkit-scrollbar {
-            width: 6px;
-        }
-        .covers-grid::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 4px;
-        }
-
-        .cover-card {
-            background: rgba(20, 20, 40, 0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            position: relative;
-        }
-        .cover-card:hover {
-            transform: translateY(-3px) scale(1.02);
-            border-color: rgba(139, 92, 246, 0.2);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-            background: rgba(30, 30, 60, 0.7);
-        }
-        .cover-card.active {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
-        }
-
-        .cover-card .cover-img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            background: #1a1a2e;
-            display: block;
-        }
-        .cover-card .cover-img .placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #1a1a2e, #2d1b3d);
-            color: #94a3b8;
-            opacity: 0.4;
-        }
-        .cover-card .cover-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .cover-card .cover-info {
-            padding: 0.3rem 0.4rem 0.4rem;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        .cover-card .cover-info .title {
-            font-size: 0.65rem;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #e2e8f0;
-        }
-        .cover-card .cover-info .artist {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            opacity: 0.5;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .cover-card .cover-flag {
-            position: absolute;
-            top: 0.3rem;
-            right: 0.3rem;
-            font-size: 1rem;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
-            z-index: 2;
-        }
-        .cover-card .cover-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.2);
-            backdrop-filter: blur(8px);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: #fff;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 3;
-            pointer-events: none;
-        }
-        .cover-card:hover .cover-play {
-            opacity: 1;
-        }
-
-        /* ============================================================
-           PAGINACIÓN
-           ============================================================ */
-        .pagination {
-            position: absolute;
-            bottom: 0.8rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 15;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(16px);
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            border: 1px solid rgba(139, 92, 246, 0.06);
-        }
-        .pagination button {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .pagination button:hover {
-            color: #e2e8f0;
-            background: rgba(139, 92, 246, 0.08);
-        }
-        .pagination button:disabled {
-            opacity: 0.2;
-            cursor: not-allowed;
-        }
-        .pagination .page-numbers {
-            display: flex;
-            gap: 0.2rem;
-            align-items: center;
-        }
-        .pagination .page-numbers span {
-            font-size: 0.65rem;
-            color: #94a3b8;
-            padding: 0.1rem 0.4rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-width: 20px;
-            text-align: center;
-        }
-        .pagination .page-numbers span:hover {
-            color: #e2e8f0;
-            background: rgba(139, 92, 246, 0.06);
-        }
-        .pagination .page-numbers span.active {
-            color: #e2e8f0;
-            background: rgba(139, 92, 246, 0.15);
-        }
-        .pagination .page-info {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            opacity: 0.3;
-            margin: 0 0.3rem;
-        }
-
-        /* ============================================================
-           INFO FLOTANTE
-           ============================================================ */
-        .album-info {
-            position: absolute;
-            bottom: 4.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(16px);
-            padding: 0.6rem 1.2rem;
-            border-radius: 14px;
-            border: 1px solid rgba(139, 92, 246, 0.12);
-            z-index: 15;
-            max-width: 450px;
-            display: none;
-            text-align: center;
-        }
-        .album-info.visible {
-            display: block;
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .album-info h3 {
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-        }
-        .album-info p {
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-        .album-info .actions {
-            display: flex;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-top: 0.3rem;
-        }
-        .album-info .actions button {
-            background: rgba(139, 92, 246, 0.08);
-            border: 1px solid rgba(139, 92, 246, 0.1);
-            color: #e2e8f0;
-            padding: 0.2rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .album-info .actions button:hover {
-            background: rgba(139, 92, 246, 0.2);
-            border-color: #8b5cf6;
-        }
-        .album-info .actions .play-btn {
-            background: rgba(139, 92, 246, 0.2);
-            border-color: #8b5cf6;
-        }
-        .album-info .actions .play-btn:hover {
-            background: rgba(139, 92, 246, 0.35);
-        }
-
-        /* ============================================================
-           PANEL DERECHO
-           ============================================================ */
-        .right-panel {
-            width: 220px;
-            min-width: 220px;
-            background: rgba(12, 12, 24, 0.95);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(139, 92, 246, 0.06);
-            padding: 0.6rem;
-            overflow-y: auto;
-            flex-shrink: 0;
-            z-index: 10;
-        }
-        .right-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-        .right-panel::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 4px;
-        }
-
-        .right-title {
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #94a3b8;
-            opacity: 0.3;
-            margin-bottom: 0.3rem;
-        }
-        .right-box {
-            margin-bottom: 0.8rem;
-        }
-
-        .mini-player {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 10px;
-            padding: 0.5rem;
-            border: 1px solid rgba(139, 92, 246, 0.04);
-        }
-        .mini-player .track-title {
-            font-size: 0.8rem;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .mini-player .track-artist {
-            font-size: 0.65rem;
-            color: #94a3b8;
-            opacity: 0.5;
-        }
-        .mini-player .track-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-top: 0.2rem;
-        }
-        .mini-player .track-controls button {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: color 0.3s;
-            padding: 0.1rem;
-        }
-        .mini-player .track-controls button:hover {
-            color: #e2e8f0;
-        }
-        .mini-player .track-controls .play-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.12);
-            border: 1px solid rgba(139, 92, 246, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-        .mini-player .track-controls .play-btn:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-        .mini-player .track-progress {
-            margin-top: 0.2rem;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .mini-player .track-progress .fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-        .mini-player .track-time {
-            font-size: 0.5rem;
-            color: #94a3b8;
-            opacity: 0.3;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.05rem;
-        }
-
-        .album-detail .cover-thumb {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-bottom: 0.3rem;
-            background: #1a1a2e;
-        }
-        .album-detail .detail-text {
-            font-size: 0.65rem;
-            color: #94a3b8;
-            line-height: 1.4;
-        }
-        .album-detail .detail-text strong {
-            color: #e2e8f0;
-            font-weight: 500;
-        }
-        .album-detail .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            margin-top: 0.2rem;
-        }
-        .album-detail .tags span {
-            font-size: 0.5rem;
-            background: rgba(139, 92, 246, 0.05);
-            padding: 0.05rem 0.4rem;
-            border-radius: 8px;
-        }
-
-        /* ============================================================
-           LOADING
-           ============================================================ */
-        .loading-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #94a3b8;
-            font-size: 0.8rem;
-            opacity: 0.4;
-            z-index: 3;
-            text-align: center;
-        }
-        .loading-overlay .spinner {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            border: 2px solid rgba(139, 92, 246, 0.1);
-            border-top-color: #8b5cf6;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 0.3rem;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 1024px) {
-            .right-panel {
-                width: 180px;
-                min-width: 180px;
-                padding: 0.4rem;
-            }
-            .sidebar {
-                width: 160px;
-                min-width: 160px;
-            }
-            .covers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                gap: 0.6rem;
-                padding: 0.8rem 1rem 4rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .right-panel {
-                display: none;
-            }
-            .covers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-                gap: 0.4rem;
-                padding: 0.5rem 0.5rem 4rem;
-            }
-            .header {
-                padding: 0.3rem 0.8rem;
-            }
-            .header-links a {
-                font-size: 0.6rem;
-                padding: 0.1rem 0.3rem;
-            }
-            .logo {
-                font-size: 1rem;
-            }
-            .header-right .badge {
-                font-size: 0.5rem;
-                padding: 0.05rem 0.3rem;
-            }
-            .album-info {
-                bottom: 3.8rem;
-                padding: 0.4rem 0.8rem;
-                max-width: 90%;
-                font-size: 0.8rem;
-            }
-            .pagination {
-                padding: 0.2rem 0.5rem;
-                gap: 0.2rem;
-                bottom: 0.5rem;
-            }
-            .pagination button {
-                font-size: 0.65rem;
-                padding: 0.1rem 0.3rem;
-            }
-            .pagination .page-numbers span {
-                font-size: 0.55rem;
-                padding: 0.05rem 0.3rem;
-                min-width: 16px;
-            }
-            .cover-card .cover-info .title {
-                font-size: 0.55rem;
-            }
-            .cover-card .cover-info .artist {
-                font-size: 0.5rem;
-            }
-            .cover-card .cover-flag {
-                font-size: 0.8rem;
-            }
-            .cover-card .cover-play {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
-            }
-            .dropdown-content {
-                min-width: 140px;
-                max-height: 200px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .covers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-                gap: 0.3rem;
-                padding: 0.3rem 0.3rem 3.5rem;
-            }
-            .header-links {
-                gap: 0.3rem;
-            }
-            .header-links a {
-                font-size: 0.5rem;
-                padding: 0.05rem 0.2rem;
-            }
-            .pagination .page-numbers span {
-                font-size: 0.5rem;
-                padding: 0.05rem 0.2rem;
-                min-width: 14px;
-            }
-            .pagination button {
-                font-size: 0.55rem;
-            }
-        }
-    </style>
+    <!-- Google Fonts (opcional, para mejor tipografía) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -835,13 +47,13 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-title">🎤 Artistas</div>
             <div id="artistList">
-                <div class="sidebar-item" style="opacity:0.2;font-size:0.6rem;">Cargando...</div>
+                <div class="sidebar-item" style="opacity:0.4;font-size:0.6rem;">Cargando...</div>
             </div>
 
             <hr class="sidebar-divider" />
 
             <div class="sidebar-title">📊 Estadísticas</div>
-            <div style="padding:0 0.6rem;font-size:0.6rem;color:#94a3b8;opacity:0.4;line-height:1.6;">
+            <div class="sidebar-stats">
                 <div>Álbumes: <strong id="statTotal">0</strong></div>
                 <div>Artistas: <strong id="statArtists">0</strong></div>
                 <div>Países: <strong id="statCountries">0</strong></div>
@@ -850,7 +62,7 @@
             <hr class="sidebar-divider" />
 
             <div class="sidebar-title">🎵 Géneros</div>
-            <div id="genreList" style="padding:0 0.6rem;font-size:0.6rem;color:#94a3b8;opacity:0.3;">
+            <div id="genreList" class="genre-list">
                 Cargando...
             </div>
         </aside>
@@ -911,14 +123,14 @@
                 <div class="album-detail" id="albumDetail">
                     <img class="cover-thumb" id="detailCover" src="" alt="Portada" style="display:none;" />
                     <div class="detail-text" id="detailInfo">
-                        <p style="opacity:0.3;font-size:0.65rem;">Haz clic en una portada</p>
+                        <p style="opacity:0.4;font-size:0.65rem;">Haz clic en una portada</p>
                     </div>
                 </div>
             </div>
 
             <div class="right-box">
                 <div class="right-title">📀 Últimos lanzamientos</div>
-                <div id="recentList" style="font-size:0.6rem;color:#94a3b8;opacity:0.4;">Cargando...</div>
+                <div id="recentList" style="font-size:0.6rem;color:#8b6b4d;opacity:0.6;">Cargando...</div>
             </div>
         </aside>
 
@@ -1125,7 +337,7 @@
         // 6. THREE.JS - FONDO 3D
         // ============================================================
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0a12);
+        scene.background = new THREE.Color(0xf5f0eb);
 
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 100);
         camera.position.set(0, 2, 8);
@@ -1136,20 +348,20 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         // Luces
-        const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+        const ambientLight = new THREE.AmbientLight(0x8b6b4d, 0.3);
         scene.add(ambientLight);
 
-        const mainLight = new THREE.DirectionalLight(0xffeedd, 1.5);
+        const mainLight = new THREE.DirectionalLight(0xffeedd, 0.8);
         mainLight.position.set(5, 8, 4);
         scene.add(mainLight);
 
-        const fillLight = new THREE.DirectionalLight(0x8b5cf6, 0.4);
+        const fillLight = new THREE.DirectionalLight(0xd4a13e, 0.3);
         fillLight.position.set(-3, 2, -2);
         scene.add(fillLight);
 
         // Partículas
         const particlesGeo = new THREE.BufferGeometry();
-        const particleCount = 600;
+        const particleCount = 400;
         const positions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount * 3; i++) {
             positions[i] = (Math.random() - 0.5) * 30;
@@ -1157,10 +369,10 @@
         particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
         const particlesMat = new THREE.PointsMaterial({
-            color: 0x8b5cf6,
+            color: 0x8b6b4d,
             size: 0.035,
             transparent: true,
-            opacity: 0.25,
+            opacity: 0.15,
             blending: THREE.AdditiveBlending,
         });
         const particles = new THREE.Points(particlesGeo, particlesMat);
@@ -1168,14 +380,14 @@
 
         // Anillos decorativos
         const ringGeo = new THREE.TorusGeometry(2.6, 0.015, 16, 80);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.06 });
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0xd4a13e, transparent: true, opacity: 0.08 });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = Math.PI / 3;
         ring.position.y = -0.5;
         scene.add(ring);
 
         const ring2 = new THREE.TorusGeometry(3.4, 0.01, 16, 80);
-        const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xec4899, transparent: true, opacity: 0.04 });
+        const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x8b6b4d, transparent: true, opacity: 0.05 });
         const ring2Mesh = new THREE.Mesh(ring2, ringMat2);
         ring2Mesh.rotation.x = -Math.PI / 4;
         ring2Mesh.position.y = 0.5;
@@ -1215,9 +427,7 @@
                     downloads: doc.downloads || 0,
                 }));
 
-                // ============================================================
                 // 🔥 ORDENAR POR FECHA (MÁS RECIENTE PRIMERO)
-                // ============================================================
                 albums.sort((a, b) => {
                     const dateA = a.date ? new Date(a.date) : new Date(0);
                     const dateB = b.date ? new Date(b.date) : new Date(0);
@@ -1248,7 +458,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 loadingText.innerHTML =
-                    `<div style="color:#ef4444;opacity:0.5;">❌ ${error.message}</div>`;
+                    `<div style="color:#a84a3a;">❌ ${error.message}</div>`;
             }
         }
 
@@ -1258,7 +468,7 @@
 
             if (albums.length === 0) {
                 coversGrid.innerHTML =
-                    `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#94a3b8;opacity:0.3;font-size:0.8rem;">🎵 No hay álbumes</div>`;
+                    `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#a68b75;font-size:0.8rem;">🎵 No hay álbumes</div>`;
                 return;
             }
 
@@ -1288,11 +498,11 @@
                     selectAlbum(album, index);
                 });
 
-                // Mostrar año en la esquina inferior (opcional)
+                // Mostrar año en la esquina inferior
                 if (album.year) {
                     const yearBadge = document.createElement('div');
                     yearBadge.style.cssText =
-                        'position:absolute;bottom:2.2rem;left:0.3rem;font-size:0.45rem;color:#94a3b8;opacity:0.3;background:rgba(0,0,0,0.4);padding:0.05rem 0.3rem;border-radius:4px;';
+                        'position:absolute;bottom:2.2rem;left:0.3rem;font-size:0.45rem;color:#a68b75;background:rgba(255,255,255,0.85);padding:0.05rem 0.3rem;border-radius:4px;border:1px solid #e8ddd2;';
                     yearBadge.textContent = album.year;
                     card.appendChild(yearBadge);
                 }
@@ -1350,7 +560,7 @@
             // Géneros (simulados)
             const genres = ['Latinoamericana', 'Folklor', 'Cumbia', 'Salsa', 'Tango', 'Bossa Nova'];
             document.getElementById('genreList').innerHTML = genres.map(g =>
-                `<span style="display:inline-block;background:rgba(139,92,246,0.04);padding:0.05rem 0.4rem;border-radius:8px;margin:0.1rem;border:1px solid rgba(139,92,246,0.03);">${g}</span>`
+                `<span class="genre-tag">${g}</span>`
             ).join('');
         }
 
@@ -1377,23 +587,21 @@
 
         // Actualizar lista de recientes
         function updateRecentList(albums) {
-            // Ya están ordenados por fecha, tomamos los primeros 5
             const recent = albums.slice(0, 5);
             if (recent.length === 0) {
-                recentList.innerHTML = '<span style="opacity:0.3;">Sin lanzamientos</span>';
+                recentList.innerHTML = '<span style="opacity:0.4;">Sin lanzamientos</span>';
                 return;
             }
 
             recentList.innerHTML = recent.map((a) => `
-                <div style="display:flex;align-items:center;gap:0.3rem;padding:0.15rem 0;border-bottom:1px solid rgba(255,255,255,0.02);cursor:pointer;"
-                     data-identifier="${a.identifier}">
-                    <span style="font-size:0.65rem;">${a.flag || '🎵'}</span>
-                    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.6rem;">${a.title || 'Sin título'}</span>
-                    <span style="opacity:0.3;font-size:0.5rem;">${a.year || ''}</span>
+                <div class="recent-item" data-identifier="${a.identifier}">
+                    <span class="recent-flag">${a.flag || '🎵'}</span>
+                    <span class="recent-title">${a.title || 'Sin título'}</span>
+                    <span class="recent-year">${a.year || ''}</span>
                 </div>
             `).join('');
 
-            recentList.querySelectorAll('div[data-identifier]').forEach(el => {
+            recentList.querySelectorAll('.recent-item').forEach(el => {
                 el.addEventListener('click', () => {
                     const album = state.allAlbums.find(a => a.identifier === el.dataset.identifier);
                     if (album) {
@@ -1766,7 +974,7 @@
         loadCountry('mexico');
         animate();
 
-        console.log('🚀 Kuikayotl 3D · Álbumes ordenados del más reciente al más antiguo');
+        console.log('🚀 Kuikayotl · Álbumes ordenados del más reciente al más antiguo');
         console.log(`📀 ${COUNTRIES.length} países disponibles`);
 
         // Exponer para debugging
